@@ -1,4 +1,4 @@
-package ua.org.oa.podkopayv.zmarket3.entity;
+package ua.org.oa.podkopayv.zmarket3.model;
 
 import javax.persistence.*;
 

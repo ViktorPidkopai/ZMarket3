@@ -1,6 +1,6 @@
 package ua.org.oa.podkopayv.zmarket3.main;
 
-import ua.org.oa.podkopayv.zmarket3.entity.Pet;
+import ua.org.oa.podkopayv.zmarket3.model.Pet;
 import ua.org.oa.podkopayv.zmarket3.repository.PetRepository;
 import ua.org.oa.podkopayv.zmarket3.repository.StorageRepositories;
 
@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
 
-        System.out.println("----------------");
+        System.out.println("-----getAll-----------");
 
         List<Pet> pets = petRepository.getAll();
 
@@ -22,9 +22,16 @@ public class Main {
             }
         }
 
+        System.out.println("-------getById---------");
+        System.out.println(petRepository.getById(1));
+        System.out.println(petRepository.getById(2));
+
+        System.out.println("-------getByName---------");
+        System.out.println(petRepository.getByName("Cat"));
+
+        System.out.println("-------getByPriceRange---------");
+        System.out.println(petRepository.getByPriceRange(15_000, 40_000));
 
     }
 
-//        System.out.println(petRepository.getById(2L));
 }
-
