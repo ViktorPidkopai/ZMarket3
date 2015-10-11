@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-2.1.4.min.js"></script>
 
 </head>
@@ -26,25 +26,20 @@
 </div>
 
 <script type="application/javascript">
-    //    var tableHTML = '<tr><th>' + 'id' + '</th><th>' + 'Name' + '</th><th>' + 'Price' + '</th></tr>';
-    //    $.getJSON("api/pet", function (data) {
-    //        var trHTML = '' + tableHTML;
-    //        $.each(data, function (index, value) {
-    //            trHTML += '<tr><td>' + value.id + '</td><td>' + value.name + '</td><td>' + value.price + '</td></tr>';
-    //        });
-    //        $('#pets_table').append(trHTML);
-    //    });
-    function paint_table() {
-        console.log("it's work!!!");
+
+    function paint_table(data) {
+
     }
+
     var tableHTML = '<thead><tr class="js_del"><th>' + 'id' + '</th><th>' + 'Name' + '</th><th>' + 'Price' + '</th><th>' + 'Actions' + '</th></tr></thead><tbody>';
     $('#goods button').on("click", function () {
         var button = $(this).attr('id');
         console.log(button + " button pressed");
         if (button == 'pets') {
-            paint_table();
+
             $.getJSON("api/pet", function (data) {
                 console.log(data);
+                paint_table(data);
                 var trHTML = '' + tableHTML;
                 $.each(data, function (index, value) {
                     trHTML += '<tr class="js_del js_edit' + value.id + '"><td>' + value.id + '</td><td>' + value.name + '</td><td>' + value.price / 100 + '</td><td>' + '<button type="button" class="btn btn-primary" data-id = "' + value.id + '">Edit</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger js_deleted" data-id = "' + value.id + '">Delete</button>' + '</td></tr>';

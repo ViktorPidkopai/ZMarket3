@@ -1,4 +1,4 @@
-package ua.org.oa.podkopayv.zmarket3.service;
+package ua.org.oa.podkopayv.zmarket3.rest;
 
 import ua.org.oa.podkopayv.zmarket3.model.Pet;
 import ua.org.oa.podkopayv.zmarket3.repository.PetRepository;
@@ -19,7 +19,6 @@ public class PetService {
         PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
         List<Pet> pets = petRepository.getAll();
         System.out.println("getAll() method is work.");
-
         if (pets.isEmpty()) {
             System.out.println("Empty result.");
         } else {
@@ -27,10 +26,18 @@ public class PetService {
                 System.out.println(pet);
             }
         }
-
         return Response.ok(pets, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getById(@QueryParam("id") long id) {
+        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        Pet result = petRepository.getById(id);
+        System.out.println("@GET getById(" + id + "); pet = " + result);
+        return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
+    }
 
     @DELETE
     @Path("{id}")
