@@ -12,7 +12,6 @@ import java.util.List;
 @Path("/pet")
 public class PetService {
 
-
     @GET
     @Produces("application/json")
     public Response getAll() {
@@ -30,13 +29,25 @@ public class PetService {
     }
 
     @GET
-    @Consumes("application/json")
+    @Path("{id}")
     @Produces("application/json")
-    public Response getById(@QueryParam("id") long id) {
+    public Response getById(@PathParam("id") long id) {
         PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
         Pet result = petRepository.getById(id);
         System.out.println("@GET getById(" + id + "); pet = " + result);
         return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    @GET
+    @Path("/itemsList/{list}")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getByIdList(@QueryParam("list") List<String> list) {
+        for (int i = 0; i < list.size(); ++i) {
+            System.out.println(list.get(i));
+        }
+        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        return Response.ok(petRepository.getAll(), MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @DELETE
@@ -59,6 +70,16 @@ public class PetService {
         System.out.println("add() method work; pet = " + pet);
         PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
         petRepository.create(pet);
+        return Response.ok(petRepository.getAll(), MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    @PUT
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response update(Pet pet) {
+        System.out.println("update() method work; pet = " + pet);
+        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        petRepository.update(pet);
         return Response.ok(petRepository.getAll(), MediaType.APPLICATION_JSON_TYPE).build();
     }
 

@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>user</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="js/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
 
 </head>
 <br/>
 
-<div class="row">
-    <div class="col-md-offset-4 col-sm-4">
-        <div class="btn-group btn-group-justified" role="group" id="goods_btns">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" id="pets">Pets</button>
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" id="breed">Breed</button>
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" id="tools">Tools</button>
-            </div>
-        </div>
-    </div>
-</div>
+<label class="col-sm-2 control-label" id="cart_label">Your cart is empty</label>
+<button type="button" class="btn btn-default" id="cart_btn" onClick='location.href="cart.html"' disabled>
+    <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>&emsp;Cart
+</button>
+
+<br/>
 
 <script type="application/javascript">
 
     $(document).ready(function () {
-        $('#pets').click(function () {
-            console.log("PETS btn clicked.");
-            $.getJSON("api/pet", function (data) {
-                paintTable(data);
-            });
+        $.getJSON("api/pet", function (data) {
+            paintTable(data);
         });
-        $('#breed').click(function () {
-            console.log("BREED btn clicked.");
-        });
-        $('#tools').click(function () {
-            console.log("TOOLS btn clicked.");
+    });
+
+    $(document).on("click", '.add_to_cart_btn', function () {
+        enableCartButton();
+        var id = $(this).attr('id');
+        console.log("ADD_TO_CART btn clicked; id = " + id);
+        addItemToCart(id);
+        console.log("in cart items: " + itemsInCart);
+        setCartLabel();
+        var list = JSON.stringify(itemsInCart);
+//        $.ajax({
+//            type: "GET",
+//            url: "api/pet/itemsList/" + list,
+////            data: list,
+//            contentType: "application/json; charset=utf-8",
+//            dataType: "json",
+//            success: function (response) {
+//                console.log(response);
+//            }
+//        });
+        $.ajax({
+            type: "GET",
+            url: "api/cart/" + id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+            }
         });
     });
 
@@ -48,86 +61,48 @@
                 '<th>' + 'Price' + '</th>' +
                 '<th>' + 'Actions' + '</th></tr></thead><tbody>';
         var tableBody = '';
-        var inputs = '<tr><td></td>' +
-                '<td><input type="text" class="form-control" name="name" id="name" onkeyup="validate();" required/></td>' +
-                '<td><input type="number" class="form-control" name="price" id="price" onkeyup="validate();" required/></td>' +
-                '<td><button type="button" class="btn btn-success" id="add_btn" disabled>Add</button></td>' +
-                '</tr></tbody>';
         $.each(data, function (index, value) {
             tableBody += '<tr><td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
                     '<td>' + value.price / 100 + '</td>' +
-                    '<td><button type="button" class="btn btn-primary edit_btn" id = "' + value.id + '">Edit</button>&nbsp;&nbsp;' +
-                    '<button type="button" class="btn btn-danger delete_btn" id = "' + value.id + '">Delete</button></td></tr>';
+                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + value.id + '">Add to cart</button></td></tr>';
         });
         $('#mainTable').html('');
         $('#mainTable').append(tableHead);
         $('#mainTable').append(tableBody);
-        $('#mainTable').append(inputs);
-        console.log("mainTable OK");
-
-        $('.edit_btn').click(function () {
-            var id = $(this).attr('id');
-            console.log("EDIT btn clicked; id = " + id);
-        });
-
-        $('.delete_btn').click(function () {
-            var id = $(this).attr('id');
-            console.log("DELETE btn clicked; id = " + id);
-            $.ajax({
-                type: "DELETE",
-                url: "api/pet/" + id,
-                data: id,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
-            refreshTable();
-        });
-
-        $('#add_btn').click(function () {
-            var name = $('input[name="name"]').val();
-            var price = $('input[name="price"]').val();
-            var pet = {
-                name: name,
-                price: price
-            };
-            console.log("ADD btn pressed. name = " + name + "; price = " + price);
-            var data = JSON.stringify(pet);
-            $.ajax({
-                type: "POST",
-                url: "api/pet",
-                data: data,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
-            refreshTable();
-        });
-
-    }
-
-    function validate() {
-        if (document.getElementById("name").value == "" | document.getElementById("price").value == "") {
-            document.getElementById("add_btn").disabled = true;
-        }
-        else {
-            document.getElementById("add_btn").disabled = false;
-        }
+        console.log("paintTable() OK");
     }
 
     function refreshTable() {
+        console.log("refreshTable() OK");
         $.getJSON("api/pet", function (data) {
             paintTable(data);
         })
     }
 
+    function addItemToCart(id) {
+        itemsInCart.push(id);
+    }
+
+    function setCartLabel() {
+        $("#cart_label").text(itemsInCart.length + " item(s) in cart");
+    }
+
+    function enableCartButton() {
+        document.getElementById("cart_btn").disabled = false;
+    }
+
+    var itemsInCart = [];
+
 </script>
 
 <br/>
 
-<div class="col-md-offset-2 col-sm-8">
-    <table class="table table-bordered" id="mainTable"></table>
+<div class="container-fluid">
+    <div class="col-md-offset-2 col-sm-8">
+        <table class="table table-bordered" id="mainTable"></table>
+    </div>
 </div>
-
 
 </body>
 </html>

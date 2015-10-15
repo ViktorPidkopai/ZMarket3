@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>admin</title>
 
     <script src="js/jquery-2.1.4.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -47,17 +49,15 @@
         console.log("EDIT btn clicked; id = " + id);
         $.ajax({
             type: "GET",
-            url: "api/pet/",
-            data: id,
-            contentType: "application/json; charset",
+            url: "api/pet/" + id,
+            contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
                 console.log(data);
+                fillEditForm(data);
+                setUpdateItemId(data.id);
             }
         });
-//        $.get("api/pet" + id, {}, function(data){
-//            console.log(data);
-//        }, "json");
     });
 
     $(document).on("click", '.delete_btn', function () {
@@ -78,12 +78,12 @@
     $(document).on("click", '#add_btn', function () {
         var name = $('input[name="name"]').val();
         var price = $('input[name="price"]').val();
-        var pet = {
+        var addItem = {
             name: name,
             price: price
         };
         console.log("ADD btn pressed. Input: name = " + name + "; price = " + price);
-        var data = JSON.stringify(pet);
+        var data = JSON.stringify(addItem);
         $.ajax({
             type: "POST",
             url: "api/pet",
@@ -92,6 +92,32 @@
             dataType: "json",
             success: function () {
                 refreshTable();
+            }
+        });
+    });
+
+    $(document).on("click", '#edit_save_btn', function () {
+        console.log("SAVE btn pressed.");
+        var name = $('input[name="edit_name"]').val();
+        var price = $('input[name="edit_price"]').val();
+        var updateItem = {
+            id: updateItemId,
+            name: name,
+            price: price
+        }
+        var data = JSON.stringify(updateItem);
+        console.log("update + " + data);
+        $.ajax({
+            type: "PUT",
+            url: "api/pet",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                refreshTable();
+                //закрыть модальное окно
+                //TODO вроде работает, но, думаю, есть другое решение
+                $('#edit_close_btn').trigger("click");
             }
         });
     });
@@ -111,7 +137,7 @@
             tableBody += '<tr><td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
                     '<td>' + value.price / 100 + '</td>' +
-                    '<td><button type="button" class="btn btn-primary btn-xs edit_btn" id = "' + value.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp;Edit</button>&nbsp;&nbsp;' +
+                    '<td><button type="button" class="btn btn-primary btn-xs edit_btn" data-toggle="modal" data-target="#edit_modal" id = "' + value.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp;Edit</button>&nbsp;&nbsp;' +
                     '<button type="button" class="btn btn-danger btn-xs delete_btn" id = "' + value.id + '"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&emsp;Delete</button></td></tr>';
         });
         $('#mainTable').html('');
@@ -137,6 +163,17 @@
         })
     }
 
+    function setUpdateItemId(id) {
+        updateItemId = id;
+    }
+
+    function fillEditForm(data) {
+        document.getElementById("edit_name").value = data.name;
+        document.getElementById("edit_price").value = data.price;
+    }
+
+    var updateItemId;
+
 </script>
 
 <br/>
@@ -153,14 +190,17 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Modal title</h4>
+                <h4 class="modal-title">Edit</h4>
             </div>
             <div class="modal-body">
-                <p>One fine body&hellip;</p>
+                <label class="col-sm-2 control-label">Name:</label>
+                <input type="text" class="form-control" name="edit_name" id="edit_name"/>
+                <label class="col-sm-2 control-label">Price:</label>
+                <input type="number" class="form-control" name="edit_price" id="edit_price"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="edit_close_btn">Close</button>
+                <button type="button" class="btn btn-primary" id="edit_save_btn">Save changes</button>
             </div>
         </div>
         <!-- /.modal-content -->
