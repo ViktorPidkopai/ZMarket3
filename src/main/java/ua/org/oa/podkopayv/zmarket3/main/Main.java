@@ -32,6 +32,9 @@ public class Main {
         System.out.println("-------getByPriceRange---------");
         System.out.println(petRepository.getByPriceRange(15_000, 40_000));
 
+//        ApplicationContext context = new ClassPathXMLApplicationContext("spring-config.xml");
+//        Pet obj = (Pet)context.get
+
     }
 
 }
