@@ -45,12 +45,13 @@
 //            }
 //        });
         $.ajax({
-            type: "GET",
-            url: "api/cart/" + id,
+            type: "POST",
+            url: "api/cart/",
+            data: list,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                console.log(data);
+                console.log("POST - OK " + data);
             }
         });
     });
