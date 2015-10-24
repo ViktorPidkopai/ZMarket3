@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
+//@Scope("session")
 public class CartService {
 
     private Cart cart = new Cart();
@@ -27,15 +28,18 @@ public class CartService {
 //    }
 
     @RequestMapping(consumes = "application/json", method = RequestMethod.POST)
-    public void putInCart(@RequestBody long id) {
-        System.out.println("/cart id = " + id);
+    public
+    @ResponseBody
+    long putInCart(@RequestBody long id) {
         cart.putInCart(id);
+        return id;
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody
     Map<Long, Integer> getAll() {
+        System.out.println("getAll() items in cart");
         return cart.getItems();
     }
 

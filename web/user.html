@@ -31,27 +31,17 @@
         var id = $(this).attr('id');
         console.log("ADD_TO_CART btn clicked; id = " + id);
         addItemToCart(id);
-        console.log("in cart items: " + itemsInCart);
+//        console.log("in cart items: " + itemsInCart);
         setCartLabel();
-        var list = JSON.stringify(itemsInCart);
-//        $.ajax({
-//            type: "GET",
-//            url: "api/pet/itemsList/" + list,
-////            data: list,
-//            contentType: "application/json; charset=utf-8",
-//            dataType: "json",
-//            success: function (response) {
-//                console.log(response);
-//            }
-//        });
+//        var list = JSON.stringify(itemsInCart);
         $.ajax({
             type: "POST",
-            url: "api/cart/",
-            data: list,
+            url: "api/cart",
+            data: id,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                console.log("POST - OK " + data);
+                console.log("ADD_TO_CART POST - OK " + data);
             }
         });
     });
