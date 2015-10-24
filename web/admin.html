@@ -132,7 +132,7 @@
         var tableBody = '';
         var inputs = '<tr><td>#</td>' +
                 '<td><input type="text" class="form-control" name="name" id="name" onkeyup="validate();" required/></td>' +
-                '<td><input type="number" class="form-control" name="price" id="price" onkeyup="validate();" required/></td>' +
+                '<td><input type="number" class="form-control" name="price" id="price" step="0" onkeyup="validate();" required/></td>' +
                 '<td><button type="button" class="btn btn-success" id="add_btn" disabled><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>&emsp;Add</button></td>' +
                 '</tr></tbody>';
         $.each(data, function (index, value) {
