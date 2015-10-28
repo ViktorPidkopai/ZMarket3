@@ -73,7 +73,7 @@ public class Pet {
 
     @Override
     public String toString() {
-        return "Pet{" +
+        return '{' +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +

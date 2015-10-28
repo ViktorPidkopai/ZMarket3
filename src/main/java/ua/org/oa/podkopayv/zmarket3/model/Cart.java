@@ -5,18 +5,17 @@ import java.util.Map;
 
 public class Cart {
 
-    private Map<Long, Integer> items = new HashMap<Long, Integer>();
-    private int totalAmount;
+    private Map<Pet, Integer> items = new HashMap<Pet, Integer>();
 
     public Cart() {
     }
 
-    public void putInCart(long id) {
-        if (items.containsKey(id)) {
-            items.put(id, items.get(id) + 1);
+    public void putInCart(Pet pet) {
+        if (items.containsKey(pet)) {
+            items.put(pet, items.get(pet) + 1);
             System.out.println(items.size() + "  _2");
         } else {
-            items.put(id, 1);
+            items.put(pet, 1);
             System.out.println(items.size() + "  _3");
         }
     }
@@ -25,8 +24,15 @@ public class Cart {
         //TODO
     }
 
-    public Map<Long, Integer> getItems() {
+    public Map<Pet, Integer> getItems() {
         return items;
     }
 
+    public int totalAmount() {
+        int totalAmount = 0;
+        for (Map.Entry<Pet, Integer> entry : items.entrySet()) {
+            totalAmount += entry.getKey().getPrice() * entry.getValue();
+        }
+        return totalAmount;
+    }
 }

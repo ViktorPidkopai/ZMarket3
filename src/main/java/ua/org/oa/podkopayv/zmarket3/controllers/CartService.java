@@ -1,11 +1,11 @@
 package ua.org.oa.podkopayv.zmarket3.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ua.org.oa.podkopayv.zmarket3.model.Cart;
+import ua.org.oa.podkopayv.zmarket3.model.Pet;
+import ua.org.oa.podkopayv.zmarket3.repository.PetRepository;
+import ua.org.oa.podkopayv.zmarket3.repository.StorageRepositories;
 
 import java.util.Map;
 
@@ -27,20 +27,29 @@ public class CartService {
 //        return id.length;
 //    }
 
-    @RequestMapping(consumes = "application/json", method = RequestMethod.POST)
+    @RequestMapping(consumes = "application/json", produces = "application/json", method = RequestMethod.POST)
     public
     @ResponseBody
-    long putInCart(@RequestBody long id) {
-        cart.putInCart(id);
-        return id;
+    Pet putInCart(@RequestBody long id) {
+        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        Pet pet = petRepository.getById(id);
+        cart.putInCart(pet);
+        return pet;
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<Long, Integer> getAll() {
+    Map<Pet, Integer> getAll() {
         System.out.println("getAll() items in cart");
         return cart.getItems();
+    }
+
+    @RequestMapping(value = "/{id}",produces = "application/json", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    int getTotalAmount(@PathVariable("id") long id) {
+        return cart.totalAmount();
     }
 
 }

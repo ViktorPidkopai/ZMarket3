@@ -15,22 +15,43 @@
 
     $(document).ready(function () {
         $.getJSON("api/cart", function (data) {
+            console.log(data);
             paintTable(data);
+            totalAmount();
         });
     });
 
+    function totalAmount() {
+        $.ajax({
+            type: "GET",
+            url: "api/cart/" + 0,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                document.getElementById('totalAmount').innerHTML = "Total amount: " + data / 100;
+            }
+        });
+    }
+
     function paintTable(data) {
-        console.log(data);
         var tableHead = '<thead><tr><th>' + 'id' + '</th>' +
                 '<th>' + 'Name' + '</th>' +
                 '<th>' + 'Price' + '</th>' +
+                '<th>' + 'Quantity' + '</th>' +
                 '<th>' + 'Actions' + '</th></tr></thead><tbody>';
         var tableBody = '';
-        $.each(data, function (index, value) {
-            tableBody += '<tr><td>' + value.id + '</td>' +
-                    '<td>' + value.name + '</td>' +
-                    '<td>' + value.price / 100 + '</td>' +
-                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + value.id + '">Delete</button></td></tr>';
+        $.each(data, function (key, value) {
+            console.log("key = " + key);
+            console.log("keyID = " + key.id);
+            console.log("keyNAME = " + key.name);
+            console.log("keyPRICE = " + key.price);
+            console.log("value = " + value);
+            tableBody += '<tr><td>' + key.id + '</td>' +
+                    '<td>' + key.name + '</td>' +
+                    '<td>' + key.price / 100 + '</td>' +
+                    '<td>' + value + '</td>' +
+                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + key.id + '">Delete</button></td></tr>';
         });
         $('#mainTable').html('');
         $('#mainTable').append(tableHead);
@@ -45,6 +66,6 @@
         <table class="table table-bordered" id="mainTable"></table>
     </div>
 </div>
-
+<div id='totalAmount'></div>
 </body>
 </html>

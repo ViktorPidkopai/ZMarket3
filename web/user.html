@@ -31,9 +31,7 @@
         var id = $(this).attr('id');
         console.log("ADD_TO_CART btn clicked; id = " + id);
         addItemToCart(id);
-//        console.log("in cart items: " + itemsInCart);
         setCartLabel();
-//        var list = JSON.stringify(itemsInCart);
         $.ajax({
             type: "POST",
             url: "api/cart",

@@ -26,6 +26,19 @@
         </div>
     </div>
 </div>
+<br/>
+
+<form class="form-inline">
+    <div class="form-group">
+        <label for="priceFromInput">Price from</label>
+        <input type="number" class="form-control" id="priceFromInput" placeholder="min price" required>
+    </div>
+    <div class="form-group">
+        <label for="priceToInput">to</label>
+        <input type="number" class="form-control" id="priceToInput" placeholder="max price" required>
+    </div>
+    <button type="button" class="btn btn-default" id="priceFilterBtn">OK</button>
+</form>
 
 <script type="application/javascript">
 
@@ -41,6 +54,11 @@
         });
         $('#tools').click(function () {
             console.log("TOOLS btn clicked.");
+        });
+        $('#priceFilterBtn').click(function () {
+            var from = document.getElementById("priceFromInput").value;
+            var to = document.getElementById("priceToInput").value;
+            console.log("PRICE_FILTER btn clicked. from = " + from + "; to = " + to);
         });
     });
 
@@ -118,7 +136,6 @@
                 console.log("PUT - OK " + data);
                 refreshTable();
                 //закрыть модальное окно
-                //TODO вроде работает, но, думаю, есть другое решение
                 $('#edit_close_btn').trigger("click");
             }
         });
@@ -136,6 +153,8 @@
                 '<td><button type="button" class="btn btn-success" id="add_btn" disabled><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>&emsp;Add</button></td>' +
                 '</tr></tbody>';
         $.each(data, function (index, value) {
+            console.log("index = " + index);
+            console.log("value = " + value);
             tableBody += '<tr><td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
                     '<td>' + value.price / 100 + '</td>' +
