@@ -2,9 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--<bean id="pet1" class="ua.org.oa.podkopayv.zmarket3.model.Pet" scope="prototype">-->
-    <!--&lt;!&ndash;<constructor-arg index=""></constructor-arg>&ndash;&gt;-->
-    <!--<property name="id" value="10"></property>-->
-    <!--<property name="name" value="TomCat"></property>-->
+    <!--<bean id="StorageRepositories" class="ua.org.oa.podkopayv.zmarket3.repository.StorageRepositories" scope="singleton">-->
+
     <!--</bean>-->
 </beans>

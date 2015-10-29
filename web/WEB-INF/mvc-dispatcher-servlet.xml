@@ -19,6 +19,11 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!--<bean id="sessionFactory" class=""-->
+    <!-- -->
+    <!--<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">-->
+    <!--<property name="sessionFactory" ref="sessionFactory"/>-->
+    <!--</bean>-->
     <!--<bean id="session" class="org.oa.ajax_rest_demo.dao.StorageSession"/>-->
 
 </beans>

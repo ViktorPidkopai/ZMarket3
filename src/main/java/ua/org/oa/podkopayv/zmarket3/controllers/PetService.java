@@ -12,6 +12,9 @@ import java.util.List;
 @RequestMapping("/pet")
 public class PetService {
 
+//    @Autowired
+//    private StorageRepositories storageRepositories;
+
     @RequestMapping(produces = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody

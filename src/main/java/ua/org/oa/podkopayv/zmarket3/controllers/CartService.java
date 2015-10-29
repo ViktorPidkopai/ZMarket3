@@ -1,5 +1,6 @@
 package ua.org.oa.podkopayv.zmarket3.controllers;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.org.oa.podkopayv.zmarket3.model.Cart;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
-//@Scope("session")
+@Scope("session")
 public class CartService {
 
     private Cart cart = new Cart();
@@ -49,6 +50,7 @@ public class CartService {
     public
     @ResponseBody
     int getTotalAmount(@PathVariable("id") long id) {
+        System.out.println("total amount = " + cart.totalAmount());
         return cart.totalAmount();
     }
 
