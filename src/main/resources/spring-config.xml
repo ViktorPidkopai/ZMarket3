@@ -39,6 +39,8 @@
                 <value>ua.org.oa.podkopayv.zmarket3.model.Pet</value>
                 <value>ua.org.oa.podkopayv.zmarket3.model.Cart</value>
                 <value>ua.org.oa.podkopayv.zmarket3.model.Order</value>
+                <value>ua.org.oa.podkopayv.zmarket3.model.Product</value>
+                <value>ua.org.oa.podkopayv.zmarket3.model.Category</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -47,7 +49,7 @@
                 <prop key="hibernate.max_fetch_depth">3</prop>
                 <prop key="hibernate.jdbc.fetch_size">50</prop>
                 <prop key="hibernate.jdbc.batch_size">10</prop>
-                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
             </props>
         </property>
@@ -62,5 +64,9 @@
         <!--<constructor-arg ref="petRepository"/>-->
         <!--<property name="petRepository" ref="petRepository"/>-->
     </bean>
+
+    <bean id="productRepository" class="ua.org.oa.podkopayv.zmarket3.repository.ProductRepositoryImpl"/>
+    <bean id="productController" class="ua.org.oa.podkopayv.zmarket3.controller.ProductController"/>
+
 
 </beans>

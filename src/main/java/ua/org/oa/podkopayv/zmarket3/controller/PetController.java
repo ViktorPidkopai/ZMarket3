@@ -26,9 +26,6 @@ private PetRepository petRepository;
         this.petRepository = petRepository;
     }
 
-    //    @Autowired
-//    private StorageRepositories storageRepositories;
-
     @RequestMapping(produces = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody
