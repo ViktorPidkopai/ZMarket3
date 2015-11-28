@@ -53,6 +53,26 @@ private PetRepository petRepository;
         return result;
     }
 
+    @RequestMapping(value = "/{min}/{max}", produces = "application/json", consumes = "application/json", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Pet> getPriceRange(@PathVariable("min") int minPrice, @PathVariable("max") int maxPrice) {
+        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        List<Pet> result = petRepository.getByPriceRange(minPrice, maxPrice);
+        System.out.println("@GET getPriceRange(" + minPrice + ", " + maxPrice + ")");
+        return result;
+    }
+
+    @RequestMapping(value = "/search/{name}", produces = "application/json", consumes = "application/json", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Pet> getByName(@PathVariable("name") String name) {
+        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        List<Pet> result = petRepository.getByName(name);
+        System.out.println("@GET getByName() - OK; name = " + name);
+        return result;
+    }
+
     @RequestMapping(value = "/{id}", produces = "application/json", method = RequestMethod.DELETE)
     public
     @ResponseBody

@@ -3,6 +3,7 @@ package ua.org.oa.podkopayv.zmarket3.repository;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import ua.org.oa.podkopayv.zmarket3.model.Pet;
 
@@ -66,9 +67,9 @@ public class PetRepository {
     public List<Pet> getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        final String hql = "FROM Pet P WHERE P.name LIKE :name";
-        Query query = session.createQuery(hql).setString("name", name);
-        List<Pet> result = query.list();
+//        final String hql = "FROM Pet P WHERE P.name LIKE :name";
+//        Query query = session.createQuery(hql).setString("name", "%" + name + "%");
+        List<Pet> result = session.createCriteria(Pet.class).add(Restrictions.like("name", "%" + name + "%")).list();
         session.getTransaction().commit();
         return result;
     }

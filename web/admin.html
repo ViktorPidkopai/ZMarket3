@@ -10,18 +10,6 @@
 
 </head>
 
-<form class="form-inline">
-    <div class="form-group">
-        <label for="priceFromInput">Price from</label>
-        <input type="number" class="form-control" id="priceFromInput" placeholder="min price" required>
-    </div>
-    <div class="form-group">
-        <label for="priceToInput">to</label>
-        <input type="number" class="form-control" id="priceToInput" placeholder="max price" required>
-    </div>
-    <button type="button" class="btn btn-default" id="priceFilterBtn">OK</button>
-</form>
-
 <script type="application/javascript">
 
     <!-- При первой загрузке на экран выводится список всех товаров-->
@@ -56,25 +44,49 @@
         //TODO method stub
     }
 
-    $(document).ready(function () {
-        $('#pets').click(function () {
-            console.log("PETS btn clicked.");
-            $.getJSON("rest/pet", function (data) {
-                fillTable(data);
+    function findByPrice() {
+        var minPriceValue = document.getElementById("minPriceInput").value;
+        var maxPriceValue = document.getElementById("maxPriceInput").value;
+        if ((minPriceValue != '' | maxPriceValue != '') && minPriceValue < maxPriceValue) {
+            console.log("PRICE FILTER btn clicked. min = " + minPriceValue + "; max = " + maxPriceValue);
+            $.ajax({
+                type: "GET",
+                url: "rest/pet/" + minPriceValue + "/" + maxPriceValue,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    fillTable(data);
+                }
             });
+            clearPriceFilterForm();
+        } else {
+            console.log("wrong pricefilter request");
+        }
+    }
+
+    function clearPriceFilterForm() {
+        document.getElementById("minPriceInput").value = '';
+        document.getElementById("maxPriceInput").value = '';
+    }
+
+    function findByName() {
+        var nameForSearch = document.getElementById("searchInput").value;
+        console.log("SEARCH btn clicked. name = " + nameForSearch);
+        $.ajax({
+            type: "GET",
+            url: "rest/pet/search/" + nameForSearch,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                fillTable(data);
+            }
         });
-        $('#breed').click(function () {
-            console.log("BREED btn clicked.");
-        });
-        $('#tools').click(function () {
-            console.log("TOOLS btn clicked.");
-        });
-        $('#priceFilterBtn').click(function () {
-            var from = document.getElementById("priceFromInput").value;
-            var to = document.getElementById("priceToInput").value;
-            console.log("PRICE_FILTER btn clicked. from = " + from + "; to = " + to);
-        });
-    });
+        clearSearchForm();
+    }
+
+    function clearSearchForm() {
+        document.getElementById("searchInput").value = '';
+    }
 
     $(document).on("click", '.edit_btn', function () {
         var id = $(this).attr('id');
@@ -222,12 +234,9 @@
             <a class="navbar-brand" href="https://github.com/ViktorPidkopai/ZMarket3" target="_blank">ZMarket</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Cart</a></li>
-            </ul>
             <form class="navbar-form navbar-right" id="searchForm">
                 <input class="form-control" placeholder="Search..." type="text" id="searchInput">
-                <button type="submit" class="btn btn-default" id="searchBtn" onClick="getSearchText();">Go!</button>
+                <button type="button" class="btn btn-default" id="searchBtn" onClick="findByName();">Go!</button>
             </form>
         </div>
     </div>
@@ -262,26 +271,20 @@
             </ul>
             <ul class="nav nav-sidebar">
                 <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAll();">All</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showPet();">Pets</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showFeeds();">Feeds</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAccessories();">
-                            Accessories
+                    <form>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="minPriceInput" placeholder="min price"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="maxPriceInput" placeholder="max price"
+                                   required>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" id="findByPriceBtn"
+                                onclick="findByPrice();"><span class="glyphicon glyphicon-search"
+                                                               aria-hidden="true"></span>&emsp;Find!
                         </button>
-                    </p>
+                    </form>
                 </li>
             </ul>
         </div>
