@@ -1,4 +1,4 @@
-package ua.org.oa.podkopayv.zmarket3.controllers;
+package ua.org.oa.podkopayv.zmarket3.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +9,24 @@ import ua.org.oa.podkopayv.zmarket3.repository.StorageRepositories;
 import java.util.List;
 
 @Controller
-@RequestMapping("/pet")
-public class PetService {
+@RequestMapping(value = "/pet")
+public class PetController {
 
 //    @Autowired
+private PetRepository petRepository;
+
+    public PetController() {
+    }
+
+    public PetController(PetRepository petRepository) {
+        this.petRepository = petRepository;
+    }
+
+    public void setPetRepository(PetRepository petRepository) {
+        this.petRepository = petRepository;
+    }
+
+    //    @Autowired
 //    private StorageRepositories storageRepositories;
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET)

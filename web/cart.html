@@ -9,7 +9,6 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>Cart</h1>
 
 <script type="application/javascript">
 
@@ -61,11 +60,54 @@
 
 </script>
 
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://github.com/ViktorPidkopai/ZMarket4" target="_blank">ZMarket</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="user1.html">Continue shopping</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="container-fluid">
     <div class="col-md-offset-2 col-sm-8">
         <table class="table table-bordered" id="mainTable"></table>
     </div>
 </div>
+
 <div id='totalAmount'></div>
+
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#paymentWindow">Checkout</button>
+
+<div class="modal fade" id="paymentWindow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Fill form below</h4>
+            </div>
+            <div class="modal-body">
+                <label class="col-sm-2 control-label">Name:</label>
+                <input type="text" class="form-control" name="edit_name" id="edit_name"/>
+                <label class="col-sm-2 control-label">Price:</label>
+                <input type="number" class="form-control" name="edit_price" id="edit_price"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="edit_close_btn">Close</button>
+                <button type="button" class="btn btn-primary" id="edit_save_btn">Confirm payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
+    <a href="https://github.com/ViktorPidkopai" target="_blank">(C) Viktor Pidkopai 2015</a>
+</footer>
+
 </body>
 </html>

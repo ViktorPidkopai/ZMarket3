@@ -1,4 +1,4 @@
-package ua.org.oa.podkopayv.zmarket3.controllers;
+package ua.org.oa.podkopayv.zmarket3.controller;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -11,9 +11,9 @@ import ua.org.oa.podkopayv.zmarket3.repository.StorageRepositories;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/cart")
+@RequestMapping(value = "/cart")
 @Scope("session")
-public class CartService {
+public class CartController {
 
     private Cart cart = new Cart();
 

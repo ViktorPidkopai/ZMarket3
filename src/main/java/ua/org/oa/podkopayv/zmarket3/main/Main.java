@@ -1,14 +1,17 @@
 package ua.org.oa.podkopayv.zmarket3.main;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ua.org.oa.podkopayv.zmarket3.model.Pet;
 import ua.org.oa.podkopayv.zmarket3.repository.PetRepository;
-import ua.org.oa.podkopayv.zmarket3.repository.StorageRepositories;
 
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
+//        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
+        PetRepository petRepository = context.getBean("petRepository", PetRepository.class);
 
         System.out.println("-----getAll-----------");
 

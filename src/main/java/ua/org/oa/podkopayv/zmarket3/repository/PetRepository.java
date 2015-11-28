@@ -3,13 +3,19 @@ package ua.org.oa.podkopayv.zmarket3.repository;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import ua.org.oa.podkopayv.zmarket3.model.Pet;
 
 import java.util.List;
 
+//@Repository
 public class PetRepository {
 
-    private final SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    public PetRepository() {
+    }
 
     public PetRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
