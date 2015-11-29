@@ -1,73 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>user</title>
+<html>
 
+<head lang="en">
+
+    <meta charset="utf-8"/>
+    <title>Buy!</title>
     <script src="js/jquery-2.1.4.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/bootstrap.min.js"></script>
 
 </head>
+
 <body>
-<br/>
-
-<label class="col-sm-2 control-label" id="cart_label">Your cart is empty</label>
-<button type="button" class="btn btn-default" id="cart_btn" onClick='location.href="cart.html"' disabled>
-    <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>&emsp;Cart
-</button>
-
-<br/>
 
 <script type="application/javascript">
 
+    <!-- При первой загрузке на экран выводится список всех товаров-->
     $(document).ready(function () {
-        $.getJSON("api/pet", function (data) {
-            paintTable(data);
+        $.getJSON("rest/pet", function (data) {
+            fillTable(data);
         });
     });
 
-    $(document).on("click", '.add_to_cart_btn', function () {
-        enableCartButton();
+
+    function showAll() {
+        console.log("All btn clicked.");
+        $.getJSON("rest/pet", function (data) {
+            fillTable(data);
+        });
+    }
+
+    //    TODO переделать метод!
+    function showPet() {
+        console.log("PETS btn clicked.");
+        $.getJSON("rest/pet", function (data) {
+            fillTable(data);
+        });
+    }
+
+    //    TODO переделать метод!
+    function showFeeds() {
+        console.log("FEEDS btn clicked.");
+        //TODO method stub
+    }
+
+    //    TODO переделать метод!
+    function showAccessories() {
+        console.log("ACCESSORIES btn clicked.");
+        //TODO method stub
+    }
+
+    function findByPrice() {
+        var minPriceValue = document.getElementById("minPriceInput").value;
+        var maxPriceValue = document.getElementById("maxPriceInput").value;
+        if ((minPriceValue != '' | maxPriceValue != '') && minPriceValue < maxPriceValue) {
+            console.log("PRICE FILTER btn clicked. min = " + minPriceValue + "; max = " + maxPriceValue);
+            $.ajax({
+                type: "GET",
+                url: "rest/pet/" + minPriceValue + "/" + maxPriceValue,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    fillTable(data);
+                }
+            });
+            clearPriceFilterForm();
+        } else {
+            console.log("wrong pricefilter request: min = " + minPriceValue + "; max = " + maxPriceValue);
+        }
+    }
+
+    function clearPriceFilterForm() {
+        document.getElementById("minPriceInput").value = '';
+        document.getElementById("maxPriceInput").value = '';
+    }
+
+    function findByName() {
+        var nameForSearch = document.getElementById("searchInput").value;
+        console.log("SEARCH btn clicked. name = " + nameForSearch);
+        $.ajax({
+            type: "GET",
+            url: "rest/pet/search/" + nameForSearch,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                fillTable(data);
+            }
+        });
+        clearSearchForm();
+    }
+
+    function clearSearchForm() {
+        document.getElementById("searchInput").value = '';
+    }
+
+    $(document).on("click", '.addToCartBtn', function () {
+//        enableCartButton();
         var id = $(this).attr('id');
-        console.log("ADD_TO_CART btn clicked; id = " + id);
+        console.log("ADDTOCART btn clicked; id = " + id);
         addItemToCart(id);
         setCartLabel();
         $.ajax({
             type: "POST",
-            url: "api/cart",
+            url: "rest/cart",
             data: id,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                console.log("ADD_TO_CART POST - OK " + data);
+                console.log("ADDTOCART - OK " + data);
             }
         });
     });
 
-    function paintTable(data) {
-        var tableHead = '<thead><tr><th>' + 'id' + '</th>' +
+    function fillTable(data) {
+        var tableHead = '<thead><tr>' +
+                '<th>' + 'id' + '</th>' +
                 '<th>' + 'Name' + '</th>' +
                 '<th>' + 'Price' + '</th>' +
-                '<th>' + 'Actions' + '</th></tr></thead><tbody>';
+                '<th>' + 'Actions' + '</th></tr></thead>';
         var tableBody = '';
         $.each(data, function (index, value) {
-            tableBody += '<tr><td>' + value.id + '</td>' +
+            console.log("index = " + index);
+            console.log("value = " + value);
+            tableBody += '<tr>' +
+                    '<td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
                     '<td>' + value.price / 100 + '</td>' +
-                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + value.id + '">Add to cart</button></td></tr>';
+                    '<td><button type="button" class="btn btn-primary btn-xs addToCartBtn" id = "' + value.id + '">' +
+                    'Add to cart' +
+                    '</button></td></tr>';
         });
-        $('#mainTable').html('');
-        $('#mainTable').append(tableHead);
-        $('#mainTable').append(tableBody);
-        console.log("paintTable() OK");
+
+        $('#itemsTable').html('');
+        $('#itemsTable').append(tableHead);
+        $('#itemsTable').append('<tbody>');
+        $('#itemsTable').append(tableBody);
+        $('#itemsTable').append('</tbody>');
+
+        console.log("fillTable() OK");
     }
 
     function refreshTable() {
         console.log("refreshTable() OK");
-        $.getJSON("api/pet", function (data) {
-            paintTable(data);
-        })
+        $.getJSON("rest/pet", function (data) {
+            fillTable(data);
+        });
     }
 
     function addItemToCart(id) {
@@ -78,21 +155,100 @@
         $("#cart_label").text(itemsInCart.length + " item(s) in cart");
     }
 
-    function enableCartButton() {
-        document.getElementById("cart_btn").disabled = false;
-    }
+    //    function enableCartButton() {
+    //        document.getElementById("cart_btn").disabled = false;
+    //    }
 
     var itemsInCart = [];
 
 </script>
 
-<br/>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://github.com/ViktorPidkopai/ZMarket4" target="_blank">ZMarket</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
 
-<div class="container-fluid">
-    <div class="col-md-offset-2 col-sm-8">
-        <table class="table table-bordered" id="mainTable"></table>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="">Logout</a>
+                    <!--<button type="button" class="btn btn-default" id="logoutBtn">Logout</button>-->
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right" id="searchForm">
+                <input class="form-control" placeholder="Search..." type="text" id="searchInput">
+                <button type="button" class="btn btn-default" id="searchBtn" onClick="findByName();">Go!</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-sidebar">
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showAll();">All</button>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showPet();">Pets</button>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showFeeds();">Feeds</button>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showAccessories();">
+                            Accessories
+                        </button>
+                    </p>
+                </li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li>
+                    <form>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="minPriceInput" placeholder="min price"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="maxPriceInput" placeholder="max price"
+                                   required>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" id="findByPriceBtn"
+                                onclick="findByPrice();"><span class="glyphicon glyphicon-search"
+                                                               aria-hidden="true"></span>&emsp;Find!
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <table class="table table-hover" id="itemsTable">
+                <!--<thead>-->
+                <!--<tr>-->
+                <!--<th>#</th>-->
+                <!--<th>Name</th>-->
+                <!--<th>Price</th>-->
+                <!--<th>Actions</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody></tbody>-->
+            </table>
+        </div>
     </div>
 </div>
+
+<footer class="text-center">
+    <a href="https://github.com/ViktorPidkopai" target="_blank">(C) Viktor Pidkopai 2015</a>
+</footer>
 
 </body>
 </html>

@@ -5,9 +5,10 @@ import java.util.Map;
 
 public class Cart {
 
-    private Map<Pet, Integer> items = new HashMap<Pet, Integer>();
+    private Map<Pet, Integer> items;
 
     public Cart() {
+        items = new HashMap<>();
     }
 
     public void putInCart(Pet pet) {

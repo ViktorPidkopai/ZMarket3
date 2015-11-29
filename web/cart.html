@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>cart</title>
@@ -13,9 +13,9 @@
 <script type="application/javascript">
 
     $(document).ready(function () {
-        $.getJSON("api/cart", function (data) {
+        $.getJSON("rest/cart", function (data) {
             console.log(data);
-            paintTable(data);
+            fillTable(data);
             totalAmount();
         });
     });
@@ -23,7 +23,7 @@
     function totalAmount() {
         $.ajax({
             type: "GET",
-            url: "api/cart/" + 0,
+            url: "rest/cart/" + 0,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
@@ -33,7 +33,7 @@
         });
     }
 
-    function paintTable(data) {
+    function fillTable(data) {
         var tableHead = '<thead><tr><th>' + 'id' + '</th>' +
                 '<th>' + 'Name' + '</th>' +
                 '<th>' + 'Price' + '</th>' +
@@ -55,7 +55,7 @@
         $('#mainTable').html('');
         $('#mainTable').append(tableHead);
         $('#mainTable').append(tableBody);
-        console.log("paintTable() OK");
+        console.log("fillTable() OK");
     }
 
 </script>
@@ -63,25 +63,29 @@
 <nav class="navbar navbar-default">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="https://github.com/ViktorPidkopai/ZMarket4" target="_blank">ZMarket</a>
+            <a class="navbar-brand" href="https://github.com/ViktorPidkopai/ZMarket3" target="_blank">ZMarket</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="user1.html">Continue shopping</a></li>
+                <li><a href="user.html">Continue shopping</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container-fluid">
-    <div class="col-md-offset-2 col-sm-8">
-        <table class="table table-bordered" id="mainTable"></table>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table class="table table-hover" id="mainTable"></table>
+            <div id='totalAmount'></div>
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#paymentWindow">
+                Checkout
+            </button>
+            </br></br>
+        </div>
     </div>
 </div>
-
-<div id='totalAmount'></div>
-
-<button type="button" class="btn btn-default" data-toggle="modal" data-target="#paymentWindow">Checkout</button>
 
 <div class="modal fade" id="paymentWindow">
     <div class="modal-dialog">
