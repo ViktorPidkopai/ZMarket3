@@ -2,7 +2,7 @@ package ua.org.oa.podkopayv.zmarket3.test;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ua.org.oa.podkopayv.zmarket3.model.Product;
+import ua.org.oa.podkopayv.zmarket3.model.Pet;
 import ua.org.oa.podkopayv.zmarket3.repository.PetRepository;
 import ua.org.oa.podkopayv.zmarket3.repository.ProductRepository;
 import ua.org.oa.podkopayv.zmarket3.repository.ProductRepositoryImpl;
@@ -16,10 +16,16 @@ public class Main {
         PetRepository petRepository = context.getBean("petRepository", PetRepository.class);
         ProductRepository productRepository = context.getBean("productRepository", ProductRepositoryImpl.class);
 
-        List<Product> products = productRepository.getAll();
-        for (Product p : products) {
+//        List<Product> products = productRepository.getAll();
+//        for (Product p : products) {
+//            System.out.println(p);
+//        }
+
+        List<Pet> pets = petRepository.getAll();
+        for (Pet p : pets) {
             System.out.println(p);
         }
+
 //        System.out.println("-----getAll-----------");
 //
 //        List<Pet> pets = petRepository.getAll();

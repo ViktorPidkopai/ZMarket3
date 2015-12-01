@@ -4,14 +4,19 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.org.oa.podkopayv.zmarket3.model.Pet;
 
 import java.util.List;
 
-//@Repository
+@Repository("petRepository")
 public class PetRepository {
 
-    //    @Autowired
+    @Qualifier("sessionFactory")
+    @Autowired
     private SessionFactory sessionFactory;
 
     public PetRepository() {
@@ -21,6 +26,7 @@ public class PetRepository {
         this.sessionFactory = sessionFactory;
     }
 
+    @Transactional
     public void create(Pet item) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
@@ -53,6 +59,7 @@ public class PetRepository {
         return pet;
     }
 
+    @Transactional
     public List<Pet> getAll() {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();

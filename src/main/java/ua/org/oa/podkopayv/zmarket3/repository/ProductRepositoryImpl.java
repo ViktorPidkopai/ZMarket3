@@ -5,7 +5,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.org.oa.podkopayv.zmarket3.model.Category;
 import ua.org.oa.podkopayv.zmarket3.model.Product;
 
@@ -15,24 +18,26 @@ import java.util.List;
 @Repository("productRepository")
 public class ProductRepositoryImpl implements ProductRepository {
 
-    //    @Qualifier("sessionFactory")
-//    @Autowired
+    @Qualifier("sessionFactory")
+    @Autowired
     private SessionFactory sessionFactory;
 
+    @Transactional
     @Override
     public void create(Product product) {
         Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
+//        session.beginTransaction();
         session.save(product);
-        session.getTransaction().commit();
+//        session.getTransaction().commit();
     }
 
+    @Transactional
     @Override
     public void update(Product product) {
         Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
+//        session.beginTransaction();
         session.update(product);
-        session.getTransaction().commit();
+//        session.getTransaction().commit();
     }
 
     @Override
