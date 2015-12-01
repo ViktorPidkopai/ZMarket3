@@ -10,9 +10,9 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-    <context:component-scan base-package="ua.org.oa.podkopayv.zmarket3.controller"/>
-
     <mvc:annotation-driven/>
+    <!--<mvc:default-servlet-handler />-->
+    <context:component-scan base-package="ua.org.oa.podkopayv.zmarket3.controller"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>

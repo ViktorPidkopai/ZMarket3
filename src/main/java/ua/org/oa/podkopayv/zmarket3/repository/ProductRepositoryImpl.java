@@ -8,7 +8,6 @@ import org.hibernate.engine.spi.SessionImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ua.org.oa.podkopayv.zmarket3.model.Category;
 import ua.org.oa.podkopayv.zmarket3.model.Product;
 
@@ -22,7 +21,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Transactional
     @Override
     public void create(Product product) {
         Session session = sessionFactory.getCurrentSession();
@@ -31,7 +29,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 //        session.getTransaction().commit();
     }
 
-    @Transactional
     @Override
     public void update(Product product) {
         Session session = sessionFactory.getCurrentSession();

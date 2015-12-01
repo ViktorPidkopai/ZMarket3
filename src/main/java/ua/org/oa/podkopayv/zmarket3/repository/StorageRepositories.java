@@ -2,12 +2,15 @@ package ua.org.oa.podkopayv.zmarket3.repository;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StorageRepositories {
 
     private PetRepository petRepository;
 
     private StorageRepositories() {
+
         SessionFactory sessionFactory;
 
         try {
@@ -17,7 +20,7 @@ public class StorageRepositories {
             throw new ExceptionInInitializerError(ex);
         }
 
-        this.petRepository = new PetRepository(sessionFactory);
+        this.petRepository = new PetRepositoryImpl(sessionFactory);
     }
 
     public static StorageRepositories getInstance() {

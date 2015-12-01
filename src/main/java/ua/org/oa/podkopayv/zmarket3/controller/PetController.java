@@ -13,18 +13,7 @@ import java.util.List;
 public class PetController {
 
 //    @Autowired
-private PetRepository petRepository;
-
-    public PetController() {
-    }
-
-    public PetController(PetRepository petRepository) {
-        this.petRepository = petRepository;
-    }
-
-    public void setPetRepository(PetRepository petRepository) {
-        this.petRepository = petRepository;
-    }
+//    private PetRepository petRepository;
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET)
     public
@@ -32,7 +21,7 @@ private PetRepository petRepository;
     List<Pet> getAll() {
         PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
         List<Pet> result = petRepository.getAll();
-        System.out.println("getAll() method is work.");
+        System.out.println("getAll() PetController");
         if (result.isEmpty()) {
             System.out.println("Empty result.");
         } else {

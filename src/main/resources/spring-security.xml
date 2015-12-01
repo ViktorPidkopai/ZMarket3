@@ -1,41 +1,41 @@
-<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns="http://www.springframework.org/schema/security"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-	http://www.springframework.org/schema/security
-	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+<!--<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"-->
+<!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--xmlns="http://www.springframework.org/schema/security"-->
+<!--xsi:schemaLocation="http://www.springframework.org/schema/beans-->
+<!--http://www.springframework.org/schema/beans/spring-beans-4.0.xsd-->
+<!--http://www.springframework.org/schema/security-->
+<!--http://www.springframework.org/schema/security/spring-security-4.0.xsd">-->
 
-    <!--<http auto-config="true" pattern="/rest/**" create-session="stateless">-->
-    <!--<intercept-url pattern="admin.html" access="ROLE_ADMIN"/>-->
-    <!--<intercept-url pattern="/**" access="hasRole('ROLE_USER', 'ROLE_ADMIN')"/>-->
-    <!--<http-basic/>-->
+<!--&lt;!&ndash;<http auto-config="true" pattern="/rest/**" create-session="stateless">&ndash;&gt;-->
+<!--&lt;!&ndash;<intercept-url pattern="admin.html" access="ROLE_ADMIN"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<intercept-url pattern="/**" access="hasRole('ROLE_USER', 'ROLE_ADMIN')"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<http-basic/>&ndash;&gt;-->
+<!--&lt;!&ndash;</http>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<http auto-config="true" pattern="/rest/**">&ndash;&gt;-->
+<!--&lt;!&ndash;<intercept-url pattern="/**" access="ROLE_USER" />&ndash;&gt;-->
+<!--&lt;!&ndash;</http>&ndash;&gt;-->
+
+
+<!--<http pattern="/css/**" security="none"/>-->
+<!--<http pattern="/fonts/**" security="none"/>-->
+<!--<http pattern="/js/**" security="none"/>-->
+<!--<http pattern="/login.jsp*" security="none"/>-->
+
+<!--<http auto-config='true'>-->
+<!--<intercept-url pattern="/**" access="ROLE_USER"/>-->
     <!--</http>-->
 
-    <!--<http auto-config="true" pattern="/rest/**">-->
-    <!--<intercept-url pattern="/**" access="ROLE_USER" />-->
-    <!--</http>-->
+<!--&lt;!&ndash;<http auto-config="true">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<intercept-url pattern="/rest/**" access="USER" />&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;</http>&ndash;&gt;-->
 
+<!--<authentication-manager>-->
+<!--<authentication-provider>-->
+<!--<user-service>-->
+<!--<user name="aaa" password="123" authorities="ROLE_USER"/>-->
+<!--</user-service>-->
+<!--</authentication-provider>-->
+<!--</authentication-manager>-->
 
-    <http pattern="/css/**" security="none"/>
-    <http pattern="/fonts/**" security="none"/>
-    <http pattern="/js/**" security="none"/>
-    <http pattern="/login.jsp*" security="none"/>
-
-    <http auto-config='true'>
-        <intercept-url pattern="/**" access="ROLE_USER"/>
-    </http>
-
-    <!--<http auto-config="true">-->
-    <!--&lt;!&ndash;<intercept-url pattern="/rest/**" access="USER" />&ndash;&gt;-->
-    <!--</http>-->
-
-    <authentication-manager>
-        <authentication-provider>
-            <user-service>
-                <user name="aaa" password="123" authorities="ROLE_USER"/>
-            </user-service>
-        </authentication-provider>
-    </authentication-manager>
-
-</beans:beans>
+<!--</beans:beans>-->
