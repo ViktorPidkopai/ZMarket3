@@ -14,18 +14,11 @@
 
     <mvc:annotation-driven/>
 
-    <!--<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">-->
-    <!--<property name="sessionFactory" ref="sessionFactory" />-->
-    <!--</bean>-->
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!--<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">-->
-    <!--<property name="sessionFactory" ref="sessionFactory"/>-->
-    <!--</bean>-->
-    <!--<bean id="session" class="org.oa.ajax_rest_demo.dao.StorageSession"/>-->
+    <bean id="springSecurityFilterChain" class="org.springframework.web.filter.DelegatingFilterProxy"/>
 
 </beans>

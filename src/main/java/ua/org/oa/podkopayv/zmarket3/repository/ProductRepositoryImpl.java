@@ -5,7 +5,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ua.org.oa.podkopayv.zmarket3.model.Category;
 import ua.org.oa.podkopayv.zmarket3.model.Product;
@@ -13,11 +12,11 @@ import ua.org.oa.podkopayv.zmarket3.model.Product;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Transactional
-@Repository
+@Repository("productRepository")
 public class ProductRepositoryImpl implements ProductRepository {
 
-    @Autowired
+    //    @Qualifier("sessionFactory")
+//    @Autowired
     private SessionFactory sessionFactory;
 
     @Override

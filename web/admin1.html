@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>admin</title>
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+
+</head>
+
+<script type="application/javascript">
+
+    <!-- При первой загрузке на экран выводится список всех товаров-->
+    $.getJSON("rest/product", function (data) {
+        fillTable(data);
+    });
+
+    function showAll() {
+        console.log("All btn clicked.");
+        $.getJSON("rest/product", function (data) {
+            fillTable(data);
+        });
+    }
+
+    //    TODO переделать метод!
+    function showPet() {
+        console.log("PETS btn clicked.");
+        $.getJSON("rest/product", function (data) {
+            fillTable(data);
+        });
+    }
+
+    //    TODO переделать метод!
+    function showFeeds() {
+        console.log("FEEDS btn clicked.");
+        //TODO method stub
+    }
+
+    //    TODO переделать метод!
+    function showAccessories() {
+        console.log("ACCESSORIES btn clicked.");
+        //TODO method stub
+    }
+
+    function findByPrice() {
+        var minPriceValue = document.getElementById("minPriceInput").value;
+        var maxPriceValue = document.getElementById("maxPriceInput").value;
+        if ((minPriceValue != '' | maxPriceValue != '') && minPriceValue < maxPriceValue) {
+            console.log("PRICE FILTER btn clicked. min = " + minPriceValue + "; max = " + maxPriceValue);
+            $.ajax({
+                type: "GET",
+                url: "rest/product/" + minPriceValue + "/" + maxPriceValue,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    fillTable(data);
+                }
+            });
+            clearPriceFilterForm();
+        } else {
+            console.log("wrong pricefilter request");
+        }
+    }
+
+    function clearPriceFilterForm() {
+        document.getElementById("minPriceInput").value = '';
+        document.getElementById("maxPriceInput").value = '';
+    }
+
+    function findByName() {
+        var nameForSearch = document.getElementById("searchInput").value;
+        console.log("SEARCH btn clicked. name = " + nameForSearch);
+        $.ajax({
+            type: "GET",
+            url: "rest/product/search/" + nameForSearch,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                fillTable(data);
+            }
+        });
+        clearSearchForm();
+    }
+
+    function clearSearchForm() {
+        document.getElementById("searchInput").value = '';
+    }
+
+    $(document).on("click", '.edit_btn', function () {
+        var id = $(this).attr('id');
+        console.log("EDIT btn clicked; id = " + id);
+        $.ajax({
+            type: "GET",
+            url: "rest/product/" + id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                fillEditForm(data);
+                setUpdateItemId(data.id);
+            }
+        });
+    });
+
+    $(document).on("click", '.delete_btn', function () {
+        var id = $(this).attr('id');
+        console.log("DELETE btn clicked; id = " + id);
+        $.ajax({
+            type: "DELETE",
+            url: "rest/product/" + id,
+            data: id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                refreshTable();
+            }
+        });
+    });
+
+    $(document).on("click", '#add_btn', function () {
+        var name = $('input[name="name"]').val();
+        var price = $('input[name="price"]').val();
+        var addItem = {
+            name: name,
+            price: price
+        };
+        console.log("ADD btn pressed. Input: name = " + name + "; price = " + price);
+        var data = JSON.stringify(addItem);
+        $.ajax({
+            type: "POST",
+            url: "rest/product",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log("add - OK + pet = " + JSON.stringify(data));
+                refreshTable();
+            }
+        });
+    });
+
+    $(document).on("click", '#edit_save_btn', function () {
+        console.log("SAVE btn pressed.");
+        var name = $('input[name="edit_name"]').val();
+        var price = $('input[name="edit_price"]').val();
+        var updateItem = {
+            id: updateItemId,
+            name: name,
+            price: price
+        }
+        var data = JSON.stringify(updateItem);
+        console.log("update + " + data);
+        $.ajax({
+            type: "PUT",
+            url: "rest/product",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log("PUT - OK " + data);
+                refreshTable();
+                //закрыть модальное окно
+                $('#edit_close_btn').trigger("click");
+            }
+        });
+    });
+
+    function fillTable(data) {
+        var tableHead = '<thead><tr>' +
+                '<th>' + 'id' + '</th>' +
+                '<th>' + 'Name' + '</th>' +
+                '<th>' + 'Price' + '</th>' +
+                '<th>' + 'Actions' + '</th></tr></thead><tbody>';
+        var tableBody = '';
+        var inputs = '<tr><td>#</td>' +
+                '<td><input type="text" class="form-control" name="name" id="name" onkeyup="validate();" required/></td>' +
+                '<td><input type="number" class="form-control" name="price" id="price" step="0" onkeyup="validate();" required/></td>' +
+                '<td><button type="button" class="btn btn-success" id="add_btn" disabled><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>&emsp;Add</button></td>' +
+                '</tr></tbody>';
+        $.each(data, function (index, value) {
+            console.log("index = " + index);
+            console.log("value = " + value);
+            tableBody += '<tr>' +
+                    '<td>' + value.id + '</td>' +
+                    '<td>' + value.name + '</td>' +
+                    '<td>' + value.price / 100 + '</td>' +
+                    '<td><button type="button" class="btn btn-primary btn-xs edit_btn" data-toggle="modal" data-target="#edit_modal" id = "' + value.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp;Edit</button>&nbsp;&nbsp;' +
+                    '<button type="button" class="btn btn-danger btn-xs delete_btn" id = "' + value.id + '"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&emsp;Delete</button></td></tr>';
+        });
+
+        $('#itemsTable').html('');
+        $('#itemsTable').append(tableHead);
+        $('#itemsTable').append(tableBody);
+        $('#itemsTable').append(inputs);
+
+        console.log("fillTable() OK");
+    }
+
+    function validate() {
+        if (document.getElementById("name").value == "" | document.getElementById("price").value == "") {
+            document.getElementById("add_btn").disabled = true;
+        } else {
+            document.getElementById("add_btn").disabled = false;
+        }
+    }
+
+    function refreshTable() {
+        console.log("refreshTable() OK");
+        $.getJSON("rest/product", function (data) {
+            fillTable(data);
+        });
+    }
+
+    function setUpdateItemId(id) {
+        updateItemId = id;
+    }
+
+    function fillEditForm(data) {
+        document.getElementById("edit_name").value = data.name;
+        document.getElementById("edit_price").value = data.price;
+    }
+
+    var updateItemId;
+
+</script>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://github.com/ViktorPidkopai/ZMarket3" target="_blank">ZMarket</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" id="searchForm">
+                <input class="form-control" placeholder="Search..." type="text" id="searchInput">
+                <button type="button" class="btn btn-default" id="searchBtn" onClick="findByName();">Go!</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-sidebar">
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showAll();">All</button>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showPet();">Pets</button>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showFeeds();">Feeds</button>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <button class="btn btn-default btn-block" type="submit" onclick="showAccessories();">
+                            Accessories
+                        </button>
+                    </p>
+                </li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li>
+                    <form>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="minPriceInput" placeholder="min price"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="maxPriceInput" placeholder="max price"
+                                   required>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" id="findByPriceBtn"
+                                onclick="findByPrice();"><span class="glyphicon glyphicon-search"
+                                                               aria-hidden="true"></span>&emsp;Find!
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <table class="table table-hover" id="itemsTable">
+                <!--<thead>-->
+                <!--<tr>-->
+                <!--<th>#</th>-->
+                <!--<th>Name</th>-->
+                <!--<th>Price</th>-->
+                <!--<th>Actions</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody></tbody>-->
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit</h4>
+            </div>
+            <div class="modal-body">
+                <label class="col-sm-2 control-label">Name:</label>
+                <input type="text" class="form-control" name="edit_name" id="edit_name"/>
+                <label class="col-sm-2 control-label">Price:</label>
+                <input type="number" class="form-control" name="edit_price" id="edit_price"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="edit_close_btn">Close</button>
+                <button type="button" class="btn btn-primary" id="edit_save_btn">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
+    <a href="https://github.com/ViktorPidkopai" target="_blank">(C) Viktor Pidkopai 2015</a>
+</footer>
+
+</body>
+</html>

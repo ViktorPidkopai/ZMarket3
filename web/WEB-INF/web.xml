@@ -4,10 +4,6 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <welcome-file-list>
-        <welcome-file>user1.html</welcome-file>
-    </welcome-file-list>
-
     <!--<servlet>-->
     <!--<servlet-name>Jersey Web Application</servlet-name>-->
     <!--<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>-->
@@ -38,16 +34,19 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
+        <param-value>
+            /WEB-INF/mvc-dispatcher-servlet.xml,
+            <!--classpath*:spring-security.xml-->
+        </param-value>
     </context-param>
 
     <!--<filter>-->
-    <!--<filter-name>springSequrityFilterChain</filter-name>-->
+    <!--<filter-name>springSecurityFilterChain</filter-name>-->
     <!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
     <!--</filter>-->
     <!--<filter-mapping>-->
-    <!--<filter-name>springSequrityFilterChain</filter-name>-->
-    <!--<url-pattern>api/*</url-pattern>-->
+    <!--<filter-name>springSecurityFilterChain</filter-name>-->
+    <!--<url-pattern>/*</url-pattern>-->
     <!--</filter-mapping>-->
 
 </web-app>
