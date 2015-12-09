@@ -11,18 +11,18 @@ import ua.org.oa.podkopayv.zmarket3.model.Pet;
 
 import java.util.List;
 
-@Repository("petRepository")
+@Repository("petRepositoryImpl")
 public class PetRepositoryImpl implements PetRepository {
 
     @Qualifier("sessionFactory")
     @Autowired
     private SessionFactory sessionFactory;
 
-    public PetRepositoryImpl() {
-    }
-
     public PetRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public PetRepositoryImpl() {
     }
 
     @Override
@@ -76,8 +76,6 @@ public class PetRepositoryImpl implements PetRepository {
     public List<Pet> getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-//        final String hql = "FROM Pet P WHERE P.name LIKE :name";
-//        Query query = session.createQuery(hql).setString("name", "%" + name + "%");
         List<Pet> result = session.createCriteria(Pet.class).add(Restrictions.like("name", "%" + name + "%")).list();
         session.getTransaction().commit();
         return result;
@@ -94,6 +92,5 @@ public class PetRepositoryImpl implements PetRepository {
         return result;
     }
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-    }
+
 }

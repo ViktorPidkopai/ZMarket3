@@ -21,8 +21,15 @@ public class Cart {
         }
     }
 
-    public void deleteFromCart(long itemId) {
-        //TODO
+    public boolean deleteFromCart(long itemId) {
+        boolean result = false;
+//        PetRepository pr = new PetRepositoryImpl();
+//        Pet pet = pr.getById(itemId);
+//        if(items.containsKey(pet)){
+//            items.remove(pet);
+//            result = true;
+//        }
+        return result;
     }
 
     public Map<Pet, Integer> getItems() {

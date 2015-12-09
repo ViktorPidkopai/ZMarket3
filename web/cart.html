@@ -33,25 +33,44 @@
         });
     }
 
+    function deleteItem(id) {
+        console.log("delete item from cart item.id = " + id);
+        $.ajax({
+            type: "DELETE",
+            url: "rest/cart/" + id,
+            data: id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log("delete result =" + data);
+            }
+        });
+    }
+
     function fillTable(data) {
-        var tableHead = '<thead><tr><th>' + 'id' + '</th>' +
+        var tableHead = '<thead><tr>' +
+                '<th>' + 'id' + '</th>' +
                 '<th>' + 'Name' + '</th>' +
                 '<th>' + 'Price' + '</th>' +
                 '<th>' + 'Quantity' + '</th>' +
-                '<th>' + 'Actions' + '</th></tr></thead><tbody>';
-        var tableBody = '';
+                '<th>' + 'Actions' + '</th>' +
+                '</tr></thead>';
+        var tableBody = '<tbody>';
         $.each(data, function (key, value) {
-            console.log("key = " + key);
-            console.log("keyID = " + key.id);
+
+            console.log("keyID = " + key.parse());
             console.log("keyNAME = " + key.name);
             console.log("keyPRICE = " + key.price);
+            console.log("key = " + key);
             console.log("value = " + value);
+
             tableBody += '<tr><td>' + key.id + '</td>' +
                     '<td>' + key.name + '</td>' +
                     '<td>' + key.price / 100 + '</td>' +
                     '<td>' + value + '</td>' +
-                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + key.id + '">Delete</button></td></tr>';
+                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + key.id + '" onClick="deleteItem(key.id);">Delete</button></td></tr>';
         });
+        tableBody += '</tbody>';
         $('#mainTable').html('');
         $('#mainTable').append(tableHead);
         $('#mainTable').append(tableBody);

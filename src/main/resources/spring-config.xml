@@ -6,10 +6,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
-    <!--<import resource="spring-security.xml"/>-->
+    <!--<import resource="classpath:spring-security.xml"/>-->
 
     <aop:config proxy-target-class="true"/>
 
@@ -17,14 +21,11 @@
 
     <context:annotation-config/>
 
-    <!--<mvc:annotation-driven/>-->
-
-    <context:component-scan base-package="ua.org.oa.podkopayv.zmarket3.controller"/>
     <context:component-scan base-package="ua.org.oa.podkopayv.zmarket3.repository"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location">
-            <value>db.properties</value>
+            <value>classpath:db.properties</value>
         </property>
     </bean>
 
@@ -54,29 +55,12 @@
                 <prop key="hibernate.jdbc.batch_size">10</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
+                <prop key="hbm2ddl.auto">update</prop>
             </props>
         </property>
     </bean>
 
     <!--<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>-->
-
-    <!--<bean id="petRepository" class="ua.org.oa.podkopayv.zmarket3.repository.PetRepositoryImpl" autowire="byType">-->
-    <!--&lt;!&ndash;&lt;!&ndash;<constructor-arg ref="sessionFactory"/>&ndash;&gt;&ndash;&gt;-->
-        <!--<property name="sessionFactory" ref="sessionFactory"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="petController" class="ua.org.oa.podkopayv.zmarket3.controller.PetController" autowire="byType">-->
-        <!--<constructor-arg ref="petRepository"/>-->
-    <!--&lt;!&ndash;<property name="petRepository" ref="petRepository"/>&ndash;&gt;-->
-    <!--</bean>-->
-
-    <!--<bean id="productRepository" class="ua.org.oa.podkopayv.zmarket3.repository.ProductRepositoryImpl" autowire="byType">-->
-    <!--&lt;!&ndash;<property name="sessionFactory" ref="sessionFactory"/>&ndash;&gt;-->
-    <!--</bean>-->
-
-    <!--<bean id="productController" class="ua.org.oa.podkopayv.zmarket3.controller.ProductController" autowire="byType">-->
-
-    <!--</bean>-->
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>

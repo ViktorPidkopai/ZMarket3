@@ -121,7 +121,7 @@
         var tableBody = '';
         $.each(data, function (index, value) {
             console.log("index = " + index);
-            console.log("value = " + value);
+            console.log("value = " + JSON.stringify(value));
             tableBody += '<tr>' +
                     '<td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +

@@ -11,7 +11,6 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
-//        PetRepository petRepository = StorageRepositories.getInstance().getPetRepository();
         PetRepository petRepository = context.getBean("petRepository", PetRepository.class);
         PetController petController = context.getBean("petController", PetController.class);
 //        ProductRepository productRepository = context.getBean("productRepository", ProductRepositoryImpl.class);

@@ -54,4 +54,12 @@ public class CartController {
         return cart.totalAmount();
     }
 
+    @RequestMapping(value = "/{id}",produces = "application/json", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    boolean deleteById(@PathVariable("id") long id) {
+        System.out.println("delete from cart item id = " + id);
+        return cart.deleteFromCart(id);
+    }
+
 }
