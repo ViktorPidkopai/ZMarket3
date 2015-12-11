@@ -12,7 +12,6 @@
                            http://www.springframework.org/schema/tx
                            http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-
     <!--<import resource="classpath:spring-security.xml"/>-->
 
     <aop:config proxy-target-class="true"/>
@@ -22,6 +21,7 @@
     <context:annotation-config/>
 
     <context:component-scan base-package="ua.org.oa.podkopayv.zmarket3.repository"/>
+    <context:component-scan base-package="ua.org.oa.podkopayv.zmarket3.service"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location">
@@ -42,9 +42,11 @@
             <list>
                 <value>ua.org.oa.podkopayv.zmarket3.model.Pet</value>
                 <value>ua.org.oa.podkopayv.zmarket3.model.Cart</value>
-                <!--<value>ua.org.oa.podkopayv.zmarket3.model.Order</value>-->
+                <value>ua.org.oa.podkopayv.zmarket3.model.Order</value>
                 <value>ua.org.oa.podkopayv.zmarket3.model.Product</value>
                 <value>ua.org.oa.podkopayv.zmarket3.model.Category</value>
+                <value>ua.org.oa.podkopayv.zmarket3.model.User</value>
+                <value>ua.org.oa.podkopayv.zmarket3.model.UserRole</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -53,9 +55,12 @@
                 <prop key="hibernate.max_fetch_depth">3</prop>
                 <prop key="hibernate.jdbc.fetch_size">50</prop>
                 <prop key="hibernate.jdbc.batch_size">10</prop>
-                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
                 <prop key="hbm2ddl.auto">update</prop>
+                <!--<prop key="hibernate.connection.useUnicode">true</prop>-->
+                <!--<prop key="connection.c">UTF-8</prop>-->
+                <prop key="hibernate.connection.charSet">UTF-8</prop>
             </props>
         </property>
     </bean>

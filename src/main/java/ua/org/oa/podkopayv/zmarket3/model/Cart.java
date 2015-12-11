@@ -14,10 +14,8 @@ public class Cart {
     public void putInCart(Pet pet) {
         if (items.containsKey(pet)) {
             items.put(pet, items.get(pet) + 1);
-            System.out.println(items.size() + "  _2");
         } else {
             items.put(pet, 1);
-            System.out.println(items.size() + "  _3");
         }
     }
 

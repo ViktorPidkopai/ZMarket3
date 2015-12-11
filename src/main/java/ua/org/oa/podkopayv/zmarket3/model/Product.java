@@ -1,6 +1,8 @@
 package ua.org.oa.podkopayv.zmarket3.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -20,6 +22,11 @@ public class Product {
 
     @Column(name = "price")
     private int price;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "product_order", joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id"))
+    private Set<Order> order = new HashSet<>(0);
 
     public Product() {
     }

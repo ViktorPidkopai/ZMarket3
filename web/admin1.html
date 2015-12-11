@@ -12,10 +12,72 @@
 
 <script type="application/javascript">
 
-    <!-- При первой загрузке на экран выводится список всех товаров-->
     $.getJSON("rest/product", function (data) {
         fillTable(data);
+        disableAddForm();
     });
+
+    $.getJSON("rest/category", function (data) {
+        setAvailableCategory(data);
+        addProductButtons(data);
+    });
+
+    function setAvailableCategory(data) {
+        $.each(data, function (index, value) {
+            availableCategories.push(value.title);
+            console.log("load category titles...");
+        });
+    }
+
+    function addProductButtons(data) {
+        addAllButton();
+        $.each(data, function (index, value) {
+            var btn = document.createElement("button");
+            var btnLabel = document.createTextNode(value.title);
+            btn.appendChild(btnLabel);
+            btn.setAttribute("class", "btn btn-default btn-block");
+            btn.setAttribute("type", "submit");
+            btn.setAttribute("id", "btn" + value.title);
+            btn.onclick = function () {
+                showByCategory(value.title)
+            };
+            var liWrapper = document.createElement("li");
+            var pWrapper = document.createElement("p");
+            pWrapper.appendChild(btn);
+            liWrapper.appendChild(pWrapper);
+            document.getElementById("productButtonGroup").appendChild(liWrapper);
+        });
+    }
+    function addAllButton() {
+        var btn = document.createElement("button");
+        var btnLabel = document.createTextNode("All");
+        btn.appendChild(btnLabel);
+        btn.setAttribute("class", "btn btn-default btn-block");
+        btn.setAttribute("type", "submit");
+        btn.setAttribute("id", "allProductsBtn");
+        btn.onclick = function () {
+            showByCategory("All")
+        };
+        var liWrapper = document.createElement("li");
+        var pWrapper = document.createElement("p");
+        pWrapper.appendChild(btn);
+        liWrapper.appendChild(pWrapper);
+        document.getElementById("productButtonGroup").appendChild(liWrapper);
+    }
+
+    function showByCategory(categoryTitle) {
+        console.log(categoryTitle + " btn clicked");
+        if (categoryTitle == "All") {
+            showAll();
+            setCurrentCategory(categoryTitle);
+        } else {
+            $.getJSON("rest/product/" + categoryTitle, function (data) {
+                fillTable(data);
+            });
+            setCurrentCategory(categoryTitle);
+            enableAddForm();
+        }
+    }
 
     function showAll() {
         console.log("All btn clicked.");
@@ -24,24 +86,8 @@
         });
     }
 
-    //    TODO переделать метод!
-    function showPet() {
-        console.log("PETS btn clicked.");
-        $.getJSON("rest/product", function (data) {
-            fillTable(data);
-        });
-    }
-
-    //    TODO переделать метод!
-    function showFeeds() {
-        console.log("FEEDS btn clicked.");
-        //TODO method stub
-    }
-
-    //    TODO переделать метод!
-    function showAccessories() {
-        console.log("ACCESSORIES btn clicked.");
-        //TODO method stub
+    function setCurrentCategory(categoryTitle) {
+        currentCategory = categoryTitle;
     }
 
     function findByPrice() {
@@ -56,17 +102,14 @@
                 dataType: "json",
                 success: function (data) {
                     fillTable(data);
+                    disableAddForm();
                 }
             });
             clearPriceFilterForm();
         } else {
-            console.log("wrong pricefilter request");
+            console.log("ERROR min = " + minPriceValue + "; max = " + maxPriceValue);
+            clearPriceFilterForm();
         }
-    }
-
-    function clearPriceFilterForm() {
-        document.getElementById("minPriceInput").value = '';
-        document.getElementById("maxPriceInput").value = '';
     }
 
     function findByName() {
@@ -79,9 +122,15 @@
             dataType: "json",
             success: function (data) {
                 fillTable(data);
+                disableAddForm();
             }
         });
         clearSearchForm();
+    }
+
+    function clearPriceFilterForm() {
+        document.getElementById("minPriceInput").value = '';
+        document.getElementById("maxPriceInput").value = '';
     }
 
     function clearSearchForm() {
@@ -117,6 +166,7 @@
                 refreshTable();
             }
         });
+        refreshTable();
     });
 
     $(document).on("click", '#add_btn', function () {
@@ -124,7 +174,8 @@
         var price = $('input[name="price"]').val();
         var addItem = {
             name: name,
-            price: price
+            price: price,
+            category: currentCategory
         };
         console.log("ADD btn pressed. Input: name = " + name + "; price = " + price);
         var data = JSON.stringify(addItem);
@@ -180,8 +231,6 @@
                 '<td><button type="button" class="btn btn-success" id="add_btn" disabled><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>&emsp;Add</button></td>' +
                 '</tr></tbody>';
         $.each(data, function (index, value) {
-            console.log("index = " + index);
-            console.log("value = " + value);
             tableBody += '<tr>' +
                     '<td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
@@ -195,7 +244,22 @@
         $('#itemsTable').append(tableBody);
         $('#itemsTable').append(inputs);
 
+        if (currentCategory == "All") {
+            disableAddForm();
+        }
         console.log("fillTable() OK");
+    }
+
+    function disableAddForm() {
+        document.getElementById("name").disabled = true;
+        document.getElementById("price").disabled = true;
+        console.log("add new product form disabled...");
+    }
+
+    function enableAddForm() {
+        document.getElementById("name").disabled = false;
+        document.getElementById("price").disabled = false;
+        console.log("add new product form enabled...");
     }
 
     function validate() {
@@ -223,6 +287,8 @@
     }
 
     var updateItemId;
+    var availableCategories = [];
+    var currentCategory;
 
 </script>
 
@@ -243,31 +309,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <ul class="nav nav-sidebar">
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAll();">All</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showPet();">Pets</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showFeeds();">Feeds</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAccessories();">
-                            Accessories
-                        </button>
-                    </p>
-                </li>
-            </ul>
-            <ul class="nav nav-sidebar">
+            <ul class="nav nav-sidebar" id="productButtonGroup"></ul>
+            <ul class="nav nav-sidebar" id="priceFilter">
                 <li>
                     <form>
                         <div class="form-group">
@@ -288,15 +331,7 @@
         </div>
         <div class="col-md-9">
             <table class="table table-hover" id="itemsTable">
-                <!--<thead>-->
-                <!--<tr>-->
-                <!--<th>#</th>-->
-                <!--<th>Name</th>-->
-                <!--<th>Price</th>-->
-                <!--<th>Actions</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody></tbody>-->
+
             </table>
         </div>
     </div>

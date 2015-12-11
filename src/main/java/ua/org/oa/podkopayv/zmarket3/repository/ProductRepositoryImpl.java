@@ -4,6 +4,7 @@ package ua.org.oa.podkopayv.zmarket3.repository;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,17 +25,17 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void create(Product product) {
         Session session = sessionFactory.getCurrentSession();
-//        session.beginTransaction();
+        session.beginTransaction();
         session.save(product);
-//        session.getTransaction().commit();
+        session.getTransaction().commit();
     }
 
     @Override
     public void update(Product product) {
         Session session = sessionFactory.getCurrentSession();
-//        session.beginTransaction();
+        session.beginTransaction();
         session.update(product);
-//        session.getTransaction().commit();
+        session.getTransaction().commit();
     }
 
     @Override
@@ -100,9 +101,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Product> getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        final String hql = "FROM Product P WHERE P.name LIKE :name";
-        Query query = session.createQuery(hql).setString("name", name);
-        List<Product> result = query.list();
+        List<Product> result = session.createCriteria(Product.class).add(Restrictions.like("name", "%" + name + "%")).list();
         session.getTransaction().commit();
         return result;
     }

@@ -15,9 +15,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public UserService() {
-    }
-
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
