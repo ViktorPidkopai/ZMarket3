@@ -98,6 +98,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         });
+        location.href = 'order.html';
     });
 
 
@@ -110,7 +111,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="user1.html">Continue shopping</a></li>
+                <li><a href="user.html">Continue shopping</a></li>
             </ul>
         </div>
     </div>
@@ -139,10 +140,12 @@
                 <h4 class="modal-title">Fill form below</h4>
             </div>
             <div class="modal-body">
-                <label class="col-sm-2 control-label">Name:</label>
-                <input type="text" class="form-control" name="edit_name" id="edit_name"/>
-                <label class="col-sm-2 control-label">Price:</label>
-                <input type="number" class="form-control" name="edit_price" id="edit_price"/>
+                <label class="col-sm-2 control-label">Credit card number:</label>
+                <input type="text" class="form-control" name="cardNumber" id="cardNumber" required/>
+                <label class="col-sm-2 control-label">Expiration date:</label>
+                <input type="number" class="form-control" name="cardExpDate" id="cardExpDate" required/>
+                <label class="col-sm-2 control-label">Security code:</label>
+                <input type="number" class="form-control" name="cardSecCode" id="cardSecCode" required/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="closeConfirmPaymentWindow">

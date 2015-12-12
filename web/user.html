@@ -15,39 +15,73 @@
 
 <script type="application/javascript">
 
-    <!-- При первой загрузке на экран выводится список всех товаров-->
-    $(document).ready(function () {
-        $.getJSON("rest/pet", function (data) {
-            fillTable(data);
-        });
+    $.getJSON("rest/product", function (data) {
+        fillTable(data);
     });
 
+    $.getJSON("rest/category", function (data) {
+        addProductButtons(data);
+    });
+
+    function addProductButtons(data) {
+        addAllButton();
+        $.each(data, function (index, value) {
+            var btn = document.createElement("button");
+            var btnLabel = document.createTextNode(value.title);
+            btn.appendChild(btnLabel);
+            btn.setAttribute("class", "btn btn-default btn-block");
+            btn.setAttribute("type", "submit");
+            btn.setAttribute("id", "btn" + value.title);
+            btn.onclick = function () {
+                showByCategory(value.title)
+            };
+            var liWrapper = document.createElement("li");
+            var pWrapper = document.createElement("p");
+            pWrapper.appendChild(btn);
+            liWrapper.appendChild(pWrapper);
+            document.getElementById("productButtonGroup").appendChild(liWrapper);
+        });
+    }
+    function addAllButton() {
+        var btn = document.createElement("button");
+        var btnLabel = document.createTextNode("All");
+        btn.appendChild(btnLabel);
+        btn.setAttribute("class", "btn btn-default btn-block");
+        btn.setAttribute("type", "submit");
+        btn.setAttribute("id", "allProductsBtn");
+        btn.onclick = function () {
+            showByCategory("All")
+        };
+        var liWrapper = document.createElement("li");
+        var pWrapper = document.createElement("p");
+        pWrapper.appendChild(btn);
+        liWrapper.appendChild(pWrapper);
+        document.getElementById("productButtonGroup").appendChild(liWrapper);
+    }
+
+    function showByCategory(categoryTitle) {
+        console.log("show by category: " + categoryTitle);
+        if (categoryTitle == "All") {
+            showAll();
+            setCurrentCategory(categoryTitle);
+        } else {
+            $.getJSON("rest/product/category/" + categoryTitle, function (data) {
+                fillTable(data);
+            });
+            setCurrentCategory(categoryTitle);
+        }
+    }
 
     function showAll() {
         console.log("All btn clicked.");
-        $.getJSON("rest/pet", function (data) {
+        $.getJSON("rest/product", function (data) {
             fillTable(data);
         });
     }
 
-    //    TODO переделать метод!
-    function showPet() {
-        console.log("PETS btn clicked.");
-        $.getJSON("rest/pet", function (data) {
-            fillTable(data);
-        });
-    }
-
-    //    TODO переделать метод!
-    function showFeeds() {
-        console.log("FEEDS btn clicked.");
-        //TODO method stub
-    }
-
-    //    TODO переделать метод!
-    function showAccessories() {
-        console.log("ACCESSORIES btn clicked.");
-        //TODO method stub
+    function setCurrentCategory(categoryTitle) {
+        currentCategory = categoryTitle;
+        console.log("currect CATEGORY = " + currentCategory);
     }
 
     function findByPrice() {
@@ -57,7 +91,7 @@
             console.log("PRICE FILTER btn clicked. min = " + minPriceValue + "; max = " + maxPriceValue);
             $.ajax({
                 type: "GET",
-                url: "rest/pet/" + minPriceValue + "/" + maxPriceValue,
+                url: "rest/product/" + minPriceValue + "/" + maxPriceValue,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -66,13 +100,9 @@
             });
             clearPriceFilterForm();
         } else {
-            console.log("wrong pricefilter request: min = " + minPriceValue + "; max = " + maxPriceValue);
+            console.log("ERROR min = " + minPriceValue + "; max = " + maxPriceValue);
+            clearPriceFilterForm();
         }
-    }
-
-    function clearPriceFilterForm() {
-        document.getElementById("minPriceInput").value = '';
-        document.getElementById("maxPriceInput").value = '';
     }
 
     function findByName() {
@@ -80,7 +110,7 @@
         console.log("SEARCH btn clicked. name = " + nameForSearch);
         $.ajax({
             type: "GET",
-            url: "rest/pet/search/" + nameForSearch,
+            url: "rest/product/search/" + nameForSearch,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
@@ -88,6 +118,11 @@
             }
         });
         clearSearchForm();
+    }
+
+    function clearPriceFilterForm() {
+        document.getElementById("minPriceInput").value = '';
+        document.getElementById("maxPriceInput").value = '';
     }
 
     function clearSearchForm() {
@@ -105,10 +140,7 @@
             url: "rest/cart",
             data: id,
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                console.log("ADDTOCART - OK " + data);
-            }
+            dataType: "json"
         });
     });
 
@@ -116,33 +148,29 @@
         var tableHead = '<thead><tr>' +
                 '<th>' + 'id' + '</th>' +
                 '<th>' + 'Name' + '</th>' +
+                '<th>' + 'Description' + '</th>' +
                 '<th>' + 'Price' + '</th>' +
                 '<th>' + 'Actions' + '</th></tr></thead>';
         var tableBody = '';
         $.each(data, function (index, value) {
-            console.log("index = " + index);
-            console.log("value = " + JSON.stringify(value));
             tableBody += '<tr>' +
                     '<td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
+                    '<td>' + value.description + '</td>' +
                     '<td>' + value.price / 100 + '</td>' +
                     '<td><button type="button" class="btn btn-primary btn-xs addToCartBtn" id = "' + value.id + '">' +
                     'Add to cart' +
                     '</button></td></tr>';
         });
 
-        $('#itemsTable').html('');
-        $('#itemsTable').append(tableHead);
-        $('#itemsTable').append('<tbody>');
-        $('#itemsTable').append(tableBody);
-        $('#itemsTable').append('</tbody>');
+        $('#itemsTable').html('').append(tableHead).append('<tbody>').append(tableBody).append('</tbody>');
 
         console.log("fillTable() OK");
     }
 
     function refreshTable() {
         console.log("refreshTable() OK");
-        $.getJSON("rest/pet", function (data) {
+        $.getJSON("rest/product", function (data) {
             fillTable(data);
         });
     }
@@ -160,6 +188,7 @@
     //    }
 
     var itemsInCart = [];
+    var currentCategory;
 
 </script>
 
@@ -187,31 +216,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <ul class="nav nav-sidebar">
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAll();">All</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showPet();">Pets</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showFeeds();">Feeds</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAccessories();">
-                            Accessories
-                        </button>
-                    </p>
-                </li>
-            </ul>
-            <ul class="nav nav-sidebar">
+            <ul class="nav nav-sidebar" id="productButtonGroup"></ul>
+            <ul class="nav nav-sidebar" id="priceFilter">
                 <li>
                     <form>
                         <div class="form-group">
@@ -232,15 +238,7 @@
         </div>
         <div class="col-md-9">
             <table class="table table-hover" id="itemsTable">
-                <!--<thead>-->
-                <!--<tr>-->
-                <!--<th>#</th>-->
-                <!--<th>Name</th>-->
-                <!--<th>Price</th>-->
-                <!--<th>Actions</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody></tbody>-->
+
             </table>
         </div>
     </div>

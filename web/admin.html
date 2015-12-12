@@ -12,34 +12,79 @@
 
 <script type="application/javascript">
 
-    $.getJSON("rest/pet", function (data) {
+    var updateItemId;
+    var currentCategory;
+
+    $.getJSON("rest/product", function (data) {
         fillTable(data);
+        disableAddForm();
+        setCurrentCategory("All");
     });
+
+    $.getJSON("rest/category", function (data) {
+        addProductButtons(data);
+    });
+
+    function addProductButtons(data) {
+        addAllButton();
+        $.each(data, function (index, value) {
+            var btn = document.createElement("button");
+            var btnLabel = document.createTextNode(value.title);
+            btn.appendChild(btnLabel);
+            btn.setAttribute("class", "btn btn-default btn-block");
+            btn.setAttribute("type", "submit");
+            btn.setAttribute("id", "btn" + value.title);
+            btn.onclick = function () {
+                showByCategory(value.title)
+            };
+            var liWrapper = document.createElement("li");
+            var pWrapper = document.createElement("p");
+            pWrapper.appendChild(btn);
+            liWrapper.appendChild(pWrapper);
+            document.getElementById("productButtonGroup").appendChild(liWrapper);
+        });
+    }
+    function addAllButton() {
+        var btn = document.createElement("button");
+        var btnLabel = document.createTextNode("All");
+        btn.appendChild(btnLabel);
+        btn.setAttribute("class", "btn btn-default btn-block");
+        btn.setAttribute("type", "submit");
+        btn.setAttribute("id", "allProductsBtn");
+        btn.onclick = function () {
+            showByCategory("All")
+        };
+        var liWrapper = document.createElement("li");
+        var pWrapper = document.createElement("p");
+        pWrapper.appendChild(btn);
+        liWrapper.appendChild(pWrapper);
+        document.getElementById("productButtonGroup").appendChild(liWrapper);
+    }
+
+    function showByCategory(categoryTitle) {
+        console.log("show by category: " + categoryTitle);
+        if (categoryTitle == "All") {
+            showAll();
+            setCurrentCategory(categoryTitle);
+        } else {
+            $.getJSON("rest/product/category/" + categoryTitle, function (data) {
+                fillTable(data);
+            });
+            setCurrentCategory(categoryTitle);
+            enableAddForm();
+        }
+    }
 
     function showAll() {
         console.log("All btn clicked.");
-        $.getJSON("rest/pet", function (data) {
+        $.getJSON("rest/product", function (data) {
             fillTable(data);
         });
     }
 
-    function showPet() {
-        console.log("PETS btn clicked.");
-        $.getJSON("rest/pet", function (data) {
-            fillTable(data);
-        });
-    }
-
-    //    TODO переделать метод!
-    function showFeeds() {
-        console.log("FEEDS btn clicked.");
-        //TODO method stub
-    }
-
-    //    TODO переделать метод!
-    function showAccessories() {
-        console.log("ACCESSORIES btn clicked.");
-        //TODO method stub
+    function setCurrentCategory(categoryTitle) {
+        currentCategory = categoryTitle;
+        console.log("currect CATEGORY = " + currentCategory);
     }
 
     function findByPrice() {
@@ -49,22 +94,19 @@
             console.log("PRICE FILTER btn clicked. min = " + minPriceValue + "; max = " + maxPriceValue);
             $.ajax({
                 type: "GET",
-                url: "rest/pet/" + minPriceValue + "/" + maxPriceValue,
+                url: "rest/product/" + minPriceValue + "/" + maxPriceValue,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
                     fillTable(data);
+                    disableAddForm();
                 }
             });
             clearPriceFilterForm();
         } else {
-            console.log("wrong pricefilter request");
+            console.log("ERROR min = " + minPriceValue + "; max = " + maxPriceValue);
+            clearPriceFilterForm();
         }
-    }
-
-    function clearPriceFilterForm() {
-        document.getElementById("minPriceInput").value = '';
-        document.getElementById("maxPriceInput").value = '';
     }
 
     function findByName() {
@@ -72,14 +114,20 @@
         console.log("SEARCH btn clicked. name = " + nameForSearch);
         $.ajax({
             type: "GET",
-            url: "rest/pet/search/" + nameForSearch,
+            url: "rest/product/search/" + nameForSearch,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
                 fillTable(data);
+                disableAddForm();
             }
         });
         clearSearchForm();
+    }
+
+    function clearPriceFilterForm() {
+        document.getElementById("minPriceInput").value = '';
+        document.getElementById("maxPriceInput").value = '';
     }
 
     function clearSearchForm() {
@@ -91,12 +139,13 @@
         console.log("EDIT btn clicked; id = " + id);
         $.ajax({
             type: "GET",
-            url: "rest/pet/" + id,
+            url: "rest/product/" + id,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
                 console.log(data);
                 fillEditForm(data);
+                setCurrentCategory(data.category);
                 setUpdateItemId(data.id);
             }
         });
@@ -107,97 +156,140 @@
         console.log("DELETE btn clicked; id = " + id);
         $.ajax({
             type: "DELETE",
-            url: "rest/pet/" + id,
+            url: "rest/product/" + id,
             data: id,
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function () {
-                refreshTable();
-            }
+            dataType: "json"
         });
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
     });
 
     $(document).on("click", '#add_btn', function () {
         var name = $('input[name="name"]').val();
+        var description = $('input[name="description"]').val();
         var price = $('input[name="price"]').val();
         var addItem = {
+            category: currentCategory,
             name: name,
+            description: description,
             price: price
         };
-        console.log("ADD btn pressed. Input: name = " + name + "; price = " + price);
+        console.log("ADD new product: " +
+                "category = " + currentCategory +
+                "; name = " + name +
+                "; description = " + description +
+                "; price = " + price);
         var data = JSON.stringify(addItem);
         $.ajax({
             type: "POST",
-            url: "rest/pet",
+            url: "rest/product",
             data: data,
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                console.log("add - OK + pet = " + JSON.stringify(data));
-                refreshTable();
-            }
+            dataType: "json"
         });
+        console.log("add - OK + pet = " + JSON.stringify(data));
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
     });
 
     $(document).on("click", '#edit_save_btn', function () {
         console.log("SAVE btn pressed.");
         var name = $('input[name="edit_name"]').val();
+        var description = $('input[name="edit_description"]').val();
         var price = $('input[name="edit_price"]').val();
         var updateItem = {
             id: updateItemId,
+            category: currentCategory,
             name: name,
+            description: description,
             price: price
-        }
+        };
         var data = JSON.stringify(updateItem);
-        console.log("update + " + data);
+        console.log("prepare to save changes...");
+        console.log("id = " + updateItem.id);
+        console.log("category = " + updateItem.category);
+        console.log("name = " + updateItem.name);
+        console.log("description = " + updateItem.description);
+        console.log("price = " + updateItem.price);
         $.ajax({
             type: "PUT",
-            url: "rest/pet",
+            url: "rest/product",
             data: data,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (data) {
-                console.log("PUT - OK " + data);
-                refreshTable();
-                //закрыть модальное окно
+            success: function () {
                 $('#edit_close_btn').trigger("click");
+                showByCategory(currentCategory);
+                showByCategory(currentCategory);
+                showByCategory(currentCategory);
+                showByCategory(currentCategory);
+                showByCategory(currentCategory);
             }
         });
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
+        showByCategory(currentCategory);
     });
+
+    ;
 
     function fillTable(data) {
         var tableHead = '<thead><tr>' +
                 '<th>' + 'id' + '</th>' +
                 '<th>' + 'Name' + '</th>' +
+                '<th>' + 'Description' + '</th>' +
                 '<th>' + 'Price' + '</th>' +
                 '<th>' + 'Actions' + '</th></tr></thead><tbody>';
         var tableBody = '';
         var inputs = '<tr><td>#</td>' +
-                '<td><input type="text" class="form-control" name="name" id="name" onkeyup="validate();" required/></td>' +
-                '<td><input type="number" class="form-control" name="price" id="price" step="0" onkeyup="validate();" required/></td>' +
+                '<td><input type="text" class="form-control" name="name" id="name" onkeyup="validateAddForm();" required/></td>' +
+                '<td><input type="text" class="form-control" name="description" id="description" onkeyup="validateAddForm();" required/></td>' +
+                '<td><input type="number" class="form-control" name="price" id="price" step="0" onkeyup="validateAddForm();" required/></td>' +
                 '<td><button type="button" class="btn btn-success" id="add_btn" disabled><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>&emsp;Add</button></td>' +
                 '</tr></tbody>';
         $.each(data, function (index, value) {
-            console.log("index = " + index);
-            console.log("value = " + value);
             tableBody += '<tr>' +
                     '<td>' + value.id + '</td>' +
                     '<td>' + value.name + '</td>' +
-                    '<td>' + value.price / 100 + '</td>' +
+                    '<td>' + value.description + '</td>' +
+                    '<td>' + value.price / 100. + '</td>' +
                     '<td><button type="button" class="btn btn-primary btn-xs edit_btn" data-toggle="modal" data-target="#edit_modal" id = "' + value.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp;Edit</button>&nbsp;&nbsp;' +
                     '<button type="button" class="btn btn-danger btn-xs delete_btn" id = "' + value.id + '"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&emsp;Delete</button></td></tr>';
         });
 
-        $('#itemsTable').html('');
-        $('#itemsTable').append(tableHead);
-        $('#itemsTable').append(tableBody);
-        $('#itemsTable').append(inputs);
+        $('#itemsTable').html('').append(tableHead).append(tableBody).append(inputs);
 
+        if (currentCategory == "All") {
+            disableAddForm();
+        }
         console.log("fillTable() OK");
     }
 
-    function validate() {
-        if (document.getElementById("name").value == "" | document.getElementById("price").value == "") {
+    function disableAddForm() {
+        document.getElementById("name").disabled = true;
+        document.getElementById("description").disabled = true;
+        document.getElementById("price").disabled = true;
+        console.log("add new product form disabled...");
+    }
+
+    function enableAddForm() {
+        document.getElementById("name").disabled = false;
+        document.getElementById("description").disabled = false;
+        document.getElementById("price").disabled = false;
+        console.log("add new product form enabled...");
+    }
+
+    function validateAddForm() {
+        if (document.getElementById("name").value == "" | document.getElementById("price").value == "" | document.getElementById("description").value == "") {
             document.getElementById("add_btn").disabled = true;
         } else {
             document.getElementById("add_btn").disabled = false;
@@ -206,7 +298,7 @@
 
     function refreshTable() {
         console.log("refreshTable() OK");
-        $.getJSON("rest/pet", function (data) {
+        $.getJSON("rest/product", function (data) {
             fillTable(data);
         });
     }
@@ -217,10 +309,11 @@
 
     function fillEditForm(data) {
         document.getElementById("edit_name").value = data.name;
+        document.getElementById("edit_description").value = data.description;
         document.getElementById("edit_price").value = data.price;
     }
 
-    var updateItemId;
+
 
 </script>
 
@@ -241,31 +334,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <ul class="nav nav-sidebar">
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAll();">All</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showPet();">Pets</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showFeeds();">Feeds</button>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <button class="btn btn-default btn-block" type="submit" onclick="showAccessories();">
-                            Accessories
-                        </button>
-                    </p>
-                </li>
-            </ul>
-            <ul class="nav nav-sidebar">
+            <ul class="nav nav-sidebar" id="productButtonGroup"></ul>
+            <ul class="nav nav-sidebar" id="priceFilter">
                 <li>
                     <form>
                         <div class="form-group">
@@ -286,15 +356,7 @@
         </div>
         <div class="col-md-9">
             <table class="table table-hover" id="itemsTable">
-                <!--<thead>-->
-                <!--<tr>-->
-                <!--<th>#</th>-->
-                <!--<th>Name</th>-->
-                <!--<th>Price</th>-->
-                <!--<th>Actions</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody></tbody>-->
+
             </table>
         </div>
     </div>
@@ -311,6 +373,8 @@
             <div class="modal-body">
                 <label class="col-sm-2 control-label">Name:</label>
                 <input type="text" class="form-control" name="edit_name" id="edit_name"/>
+                <label class="col-sm-2 control-label">Description:</label>
+                <input type="text" class="form-control" name="edit_description" id="edit_description"/>
                 <label class="col-sm-2 control-label">Price:</label>
                 <input type="number" class="form-control" name="edit_price" id="edit_price"/>
             </div>
