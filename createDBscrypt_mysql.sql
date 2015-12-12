@@ -11,10 +11,10 @@ USE `zmarket3`;
 /*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE = @@TIME_ZONE */;
-/*!40103 SET TIME_ZONE = '' + 00 :00'' */;
+/*!40103 SET TIME_ZONE = '+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0 */;
-/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = '' NO_AUTO_VALUE_ON_ZERO'' */;
+/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
 --
@@ -32,7 +32,7 @@ CREATE TABLE `category` (
   UNIQUE KEY `name_UNIQUE` (`title`)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT = 5
+  AUTO_INCREMENT = 4
   DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,7 +42,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (2, ''Feeds''), (1, ''Pets''), (3, ''Tools'');
+INSERT INTO `category` VALUES (2, 'Feeds'), (1, 'Pets'), (3, 'Tools');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +58,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT = 6
+  AUTO_INCREMENT = 10
   DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -68,40 +68,8 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1), (2), (3), (4), (5);
+INSERT INTO `orders` VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `pets`
---
-
-DROP TABLE IF EXISTS `pets`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pets` (
-  `id`    BIGINT(20)  NOT NULL AUTO_INCREMENT,
-  `name`  VARCHAR(45) NOT NULL,
-  `price` INT(11)     NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-)
-  ENGINE = InnoDB
-  AUTO_INCREMENT = 162
-  DEFAULT CHARSET = utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pets`
---
-
-LOCK TABLES `pets` WRITE;
-/*!40000 ALTER TABLE `pets` DISABLE KEYS */;
-INSERT INTO `pets`
-VALUES (1, ''Dog'', 15001), (144, ''Elethant'', 4333), (145, ''Penguin'', 4343), (146, ''Walrus'', 234539),
-  (147, ''Bear'', 3444444), (151, ''Cat'', 7969876), (152, ''Rabbit'', 10000), (154, ''tret'', 466),
-  (156, ''Собачечька'', 24565), (159, ''124234'', 2433), (161, ''Носорог'', 432543543);
-/*!40000 ALTER TABLE `pets` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -116,14 +84,14 @@ CREATE TABLE `product` (
   `name`        VARCHAR(45) NOT NULL,
   `price`       INT(11)     NOT NULL,
   `category_id` INT(11)     NOT NULL,
-  `description` VARCHAR(255) DEFAULT NULL,
+  `description` VARCHAR(255)         DEFAULT NULL,
   PRIMARY KEY (`id`, `category_id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_product_category_idx` (`category_id`),
   CONSTRAINT `FK_rlaghtegr0yx2c1q1s6nkqjlh` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT = 80
+  AUTO_INCREMENT = 11
   DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -134,11 +102,11 @@ CREATE TABLE `product` (
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
 INSERT INTO `product`
-VALUES (1, ''Pet1'', 10000, 1, ''Description FOR Pet1''), (2, ''Pet2'', 15000, 1, ''Description FOR Pet2''),
-  (3, ''Pet3'', 9000, 1, ''Description FOR Pet3''), (4, ''Feeds1'', 9999, 2, ''Description FOR Feeds1''),
-  (5, ''Feeds2'', 9999, 2, ''Description FOR Feeds2''), (6, ''Feeds3'', 9999, 2, ''Description FOR Feeds1''),
-  (7, ''Tool1'', 9999, 3, ''Description FOR Tool1''), (8, ''Tool2'', 9999, 3, ''Description FOR Tool2''),
-  (9, ''Tool3'', 99999, 3, ''Description FOR Tool3'');
+VALUES (1, 'Pet1', 10000, 1, 'Description for Pet1'), (2, 'Pet2', 15000, 1, 'Description for Pet2'),
+  (3, 'Pet3', 9000, 1, 'Description for Pet3'), (4, 'Feeds1', 9999, 2, 'Description for Feeds1'),
+  (5, 'Feeds2', 9999, 2, 'Description for Feeds2'), (6, 'Feeds3', 9999, 2, 'Description for Feeds1'),
+  (8, 'Tool2', 9999, 3, 'Description for Tool2'), (9, 'Tool3', 99999, 3, 'Description for Tool3'),
+  (10, 'Pet4', 3453245, 1, 'saklf;lk');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +119,7 @@ DROP TABLE IF EXISTS `product_order`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `product_order` (
   `product_id` BIGINT(20) NOT NULL,
-  `order_id` BIGINT(20) NOT NULL,
+  `order_id`   BIGINT(20) NOT NULL,
   PRIMARY KEY (`product_id`, `order_id`),
   KEY `FK_sf5yp37b7qt63qqoq25f82lpu` (`order_id`),
   CONSTRAINT `FK_5uw5nxqovigv7mf1gmbos1rl8` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
@@ -219,7 +187,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1, ''admin'', ''admin''), (2, ''USER'', ''USER'');
+INSERT INTO `user` VALUES (1, 'admin', 'admin'), (2, 'user', 'user');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,4 +228,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-11 23:22:35
+-- Dump completed on 2015-12-12 21:48:05
