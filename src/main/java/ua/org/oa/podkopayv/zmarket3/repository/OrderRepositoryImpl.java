@@ -22,6 +22,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         session.save(order);
+        System.out.println("ORDER - OK");
         session.getTransaction().commit();
     }
 

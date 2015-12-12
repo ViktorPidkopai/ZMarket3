@@ -18,7 +18,7 @@ public class ProductController {
     @RequestMapping(consumes = "application/json", produces = "application/json", method = RequestMethod.POST)
     public
     @ResponseBody
-    void add(@RequestBody ProductDTO dto) {
+    void create(@RequestBody ProductDTO dto) {
         System.out.println("product controller add() product = " + dto);
         productService.create(dto);
     }
@@ -39,7 +39,7 @@ public class ProductController {
         return productService.getAll();
     }
 
-    @RequestMapping(value = "/{category}", produces = "application/json", method = RequestMethod.GET)
+    @RequestMapping(value = "category/{category}", produces = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody
     List<ProductDTO> getByCategory(@PathVariable("category") String categoryTitle) {
@@ -55,12 +55,29 @@ public class ProductController {
         return productService.getByName(name);
     }
 
+    @RequestMapping(value = "/{id}", produces = "application/json", consumes = "application/json", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ProductDTO getById(@PathVariable("id") long id) {
+        ProductDTO result = productService.getById(id);
+        System.out.println("productController getId(" + id + ") = " + result);
+        return result;
+    }
+
     @RequestMapping(value = "/{min}/{max}", produces = "application/json", consumes = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody
     List<ProductDTO> getPriceRange(@PathVariable("min") int minPrice, @PathVariable("max") int maxPrice) {
         System.out.println("productController getByPriceRange(" + minPrice + ", " + maxPrice + ")");
         return productService.getByPriceRange(minPrice, maxPrice);
+    }
+
+    @RequestMapping(consumes = "application/json", method = RequestMethod.PUT)
+    public
+    @ResponseBody
+    void update(@RequestBody ProductDTO dto) {
+        System.out.println("productController update() product = " + dto);
+        productService.update(dto);
     }
 
 }

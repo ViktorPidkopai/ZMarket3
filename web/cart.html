@@ -58,24 +58,48 @@
         var tableBody = '<tbody>';
         $.each(data, function (key, value) {
 
-            console.log("keyID = " + key.parse());
-            console.log("keyNAME = " + key.name);
-            console.log("keyPRICE = " + key.price);
-            console.log("key = " + key);
+            console.log("keyID = " + value.id);
+            console.log("keyNAME = " + value.name);
+            console.log("keyPRICE = " + value.price);
+            console.log("key = " + value);
             console.log("value = " + value);
 
-            tableBody += '<tr><td>' + key.id + '</td>' +
-                    '<td>' + key.name + '</td>' +
-                    '<td>' + key.price / 100 + '</td>' +
+            tableBody += '<tr><td>' + value.id + '</td>' +
+                    '<td>' + value.name + '</td>' +
+                    '<td>' + value.price / 100 + '</td>' +
                     '<td>' + value + '</td>' +
-                    '<td><button type="button" class="btn btn-primary btn-xs add_to_cart_btn" id = "' + key.id + '" onClick="deleteItem(key.id);">Delete</button></td></tr>';
+                    '<td><button type="button" class="btn btn-primary btn-xs delete_btn" id = "' + value.id + '">Delete</button></td></tr>';
         });
         tableBody += '</tbody>';
-        $('#mainTable').html('');
-        $('#mainTable').append(tableHead);
-        $('#mainTable').append(tableBody);
+        $('#mainTable').html('').append(tableHead).append(tableBody);
         console.log("fillTable() OK");
     }
+
+    $(document).on("click", '.delete_btn', function () {
+        var id = $(this).attr('id');
+        console.log("cart DELETE btn clicked; id = " + id);
+        $.ajax({
+            type: "DELETE",
+            url: "rest/cart/" + id,
+            data: id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                alert("delete OK");
+            }
+        });
+    });
+
+    $(document).on("click", '#confirmPaymentBtn', function () {
+        console.log("create order...");
+        $.ajax({
+            type: "POST",
+            url: "rest/cart/order",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+
 
 </script>
 
@@ -86,7 +110,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="user.html">Continue shopping</a></li>
+                <li><a href="user1.html">Continue shopping</a></li>
             </ul>
         </div>
     </div>
@@ -121,8 +145,10 @@
                 <input type="number" class="form-control" name="edit_price" id="edit_price"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="edit_close_btn">Close</button>
-                <button type="button" class="btn btn-primary" id="edit_save_btn">Confirm payment</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeConfirmPaymentWindow">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmPaymentBtn">Confirm payment</button>
             </div>
         </div>
     </div>

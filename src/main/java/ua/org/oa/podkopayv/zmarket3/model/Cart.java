@@ -1,42 +1,60 @@
 package ua.org.oa.podkopayv.zmarket3.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import ua.org.oa.podkopayv.zmarket3.dto.ProductDTO;
+import ua.org.oa.podkopayv.zmarket3.repository.CategoryRepository;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class Cart {
 
-    private Map<Pet, Integer> items;
+    @Qualifier("categoryRepository")
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    private Map<Product, Integer> items = new HashMap<>();
 
     public Cart() {
-        items = new HashMap<>();
     }
 
-    public void putInCart(Pet pet) {
-        if (items.containsKey(pet)) {
-            items.put(pet, items.get(pet) + 1);
+    public void putInCart(ProductDTO dto) {
+        System.out.println("cart dto = " + dto);
+        Product product = new Product();
+        product.setId(dto.getId());
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setCategory(categoryRepository.getByTitle(dto.getCategory()));
+
+        if (items.containsKey(product)) {
+            items.put(product, items.get(product) + 1);
         } else {
-            items.put(pet, 1);
+            items.put(product, 1);
         }
     }
 
     public boolean deleteFromCart(long itemId) {
         boolean result = false;
-//        PetRepository pr = new PetRepositoryImpl();
-//        Pet pet = pr.getById(itemId);
-//        if(items.containsKey(pet)){
-//            items.remove(pet);
-//            result = true;
-//        }
+        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+            if (entry.getKey().getId() == itemId) {
+                items.remove(entry.getKey());
+                result = true;
+            }
+        }
         return result;
     }
 
-    public Map<Pet, Integer> getItems() {
+    public Map<Product, Integer> getItems() {
         return items;
     }
 
     public int totalAmount() {
         int totalAmount = 0;
-        for (Map.Entry<Pet, Integer> entry : items.entrySet()) {
+        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
             totalAmount += entry.getKey().getPrice() * entry.getValue();
         }
         return totalAmount;

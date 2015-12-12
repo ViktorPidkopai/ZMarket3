@@ -21,7 +21,6 @@ public class ProductService {
 
     public List<ProductDTO> getAll() {
         System.out.println("productService getAll()");
-
         List<ProductDTO> result = new ArrayList<>();
         List<Product> products = productRepository.getAll();
         products.stream().forEach(p -> result.add(new ProductDTO(p)));
@@ -51,6 +50,10 @@ public class ProductService {
         return result;
     }
 
+    public ProductDTO getById(long id) {
+        return new ProductDTO(productRepository.getById(id));
+    }
+
     public void delete(long id) {
         Product p = new Product();
         p.setId(id);
@@ -60,8 +63,19 @@ public class ProductService {
     public void create(ProductDTO dto) {
         Product product = new Product();
         product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setCategory(categoryRepository.getByTitle(dto.getCategory()));
         productRepository.create(product);
+    }
+
+    public void update(ProductDTO dto) {
+        Product product = new Product();
+        product.setId(dto.getId());
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setCategory(categoryRepository.getByTitle(dto.getCategory()));
+        productRepository.update(product);
     }
 }

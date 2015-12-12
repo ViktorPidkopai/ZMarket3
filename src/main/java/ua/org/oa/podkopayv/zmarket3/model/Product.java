@@ -20,6 +20,9 @@ public class Product {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "price")
     private int price;
 
@@ -67,6 +70,22 @@ public class Product {
         this.price = price;
     }
 
+    public Set<Order> getOrder() {
+        return order;
+    }
+
+    public void setOrder(Set<Order> order) {
+        this.order = order;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,7 +97,9 @@ public class Product {
         if (getPrice() != product.getPrice()) return false;
         if (getCategory() != null ? !getCategory().equals(product.getCategory()) : product.getCategory() != null)
             return false;
-        return !(getName() != null ? !getName().equals(product.getName()) : product.getName() != null);
+        if (!getName().equals(product.getName())) return false;
+        if (!getDescription().equals(product.getDescription())) return false;
+        return !(getOrder() != null ? !getOrder().equals(product.getOrder()) : product.getOrder() != null);
 
     }
 
@@ -86,8 +107,10 @@ public class Product {
     public int hashCode() {
         int result = (int) (getId() ^ (getId() >>> 32));
         result = 31 * result + (getCategory() != null ? getCategory().hashCode() : 0);
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getDescription().hashCode();
         result = 31 * result + getPrice();
+        result = 31 * result + (getOrder() != null ? getOrder().hashCode() : 0);
         return result;
     }
 
@@ -95,9 +118,12 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", category='" + category + '\'' +
+                ", category=" + category +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 ", price=" + price +
+                ", order=" + order +
                 '}';
     }
+
 }

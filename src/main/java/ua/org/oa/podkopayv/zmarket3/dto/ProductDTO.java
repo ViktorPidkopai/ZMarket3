@@ -7,6 +7,7 @@ public class ProductDTO {
     private long id;
     private String category;
     private String name;
+    private String description;
     private int price;
 
     public ProductDTO() {
@@ -16,6 +17,7 @@ public class ProductDTO {
         this.id = product.getId();
         this.category = product.getCategory().getTitle();
         this.name = product.getName();
+        this.description = product.getDescription();
         this.price = product.getPrice();
     }
 
@@ -51,28 +53,12 @@ public class ProductDTO {
         this.price = price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProductDTO)) return false;
-
-        ProductDTO that = (ProductDTO) o;
-
-        if (getId() != that.getId()) return false;
-        if (getPrice() != that.getPrice()) return false;
-        if (getCategory() != null ? !getCategory().equals(that.getCategory()) : that.getCategory() != null)
-            return false;
-        return !(getName() != null ? !getName().equals(that.getName()) : that.getName() != null);
-
+    public String getDescription() {
+        return description;
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (getCategory() != null ? getCategory().hashCode() : 0);
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + getPrice();
-        return result;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -81,6 +67,7 @@ public class ProductDTO {
                 "id=" + id +
                 ", category='" + category + '\'' +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
     }
