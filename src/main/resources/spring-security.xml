@@ -11,19 +11,18 @@
        <security:http pattern="/fonts/**" security="none"/>
        <security:http pattern="/js/**" security="none"/>
 
-       <security:http pattern="/rest/**" create-session="stateless">
-              <security:intercept-url pattern="/**" access="ROLE_USER"/>
-              <security:http-basic/>
+
+       <security:http auto-config="true" create-session="stateless" use-expressions="true">
+              <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+              <security:csrf/>
        </security:http>
 
        <security:authentication-manager>
-              <security:authentication-provider>
-                     <security:user-service>
-                            <security:user name="remote" password="remote" authorities="ROLE_USER"/>
-                     </security:user-service>
+              <security:authentication-provider user-service-ref="userDetailService">
               </security:authentication-provider>
        </security:authentication-manager>
 
        <bean id="springSecurityFilterChain" class="org.springframework.web.filter.DelegatingFilterProxy"/>
+       <bean id="userDetailService" class="ua.org.oa.podkopayv.zmarket3.service.UserService"/>
 
 </beans>

@@ -87,4 +87,22 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", userRoles=" + userRoles +
+                '}';
+    }
 }
