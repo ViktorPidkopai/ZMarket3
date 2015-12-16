@@ -7,6 +7,10 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security.xsd">
 
+       <security:http pattern="/css/**" security="none"/>
+       <security:http pattern="/fonts/**" security="none"/>
+       <security:http pattern="/js/**" security="none"/>
+
        <security:http pattern="/rest/**" create-session="stateless">
               <security:intercept-url pattern="/**" access="ROLE_USER"/>
               <security:http-basic/>

@@ -45,11 +45,6 @@ public class Category {
         this.products = products;
     }
 
-//    @Override
-//    public String toString() {
-//        return title;
-//    }
-
     @Override
     public String toString() {
         return "Category{" +

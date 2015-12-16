@@ -41,5 +41,4 @@ public class UserRole {
         this.role = role;
     }
 
-//    public Set<User>
 }

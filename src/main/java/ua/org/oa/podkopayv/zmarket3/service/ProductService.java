@@ -2,6 +2,8 @@ package ua.org.oa.podkopayv.zmarket3.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ua.org.oa.podkopayv.zmarket3.dto.ProductDTO;
 import ua.org.oa.podkopayv.zmarket3.model.Product;
 import ua.org.oa.podkopayv.zmarket3.repository.CategoryRepository;
@@ -10,8 +12,11 @@ import ua.org.oa.podkopayv.zmarket3.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("productService")
+@Service
+@Transactional
 public class ProductService {
+
+//    private static final Logger log = Logger.getLogger(ProductService.class);
 
     @Autowired
     private ProductRepository productRepository;
@@ -19,6 +24,7 @@ public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> getAll() {
         System.out.println("productService getAll()");
         List<ProductDTO> result = new ArrayList<>();
@@ -27,6 +33,7 @@ public class ProductService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> getByCategoryTitle(String title) {
         System.out.println("productService getByCategory(" + title + ")");
         List<ProductDTO> result = new ArrayList<>();
@@ -35,6 +42,7 @@ public class ProductService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> getByName(String name) {
         System.out.println("productService getByName(" + name + ")");
         List<ProductDTO> result = new ArrayList<>();
@@ -43,6 +51,7 @@ public class ProductService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> getByPriceRange(int minPrice, int maxPrice) {
         List<ProductDTO> result = new ArrayList<>();
         List<Product> products = productRepository.getByPriceRange(minPrice, maxPrice);
@@ -50,16 +59,19 @@ public class ProductService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public ProductDTO getById(long id) {
         return new ProductDTO(productRepository.getById(id));
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void delete(long id) {
         Product p = new Product();
         p.setId(id);
         productRepository.delete(p);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(ProductDTO dto) {
         Product product = new Product();
         product.setName(dto.getName());
@@ -69,6 +81,7 @@ public class ProductService {
         productRepository.create(product);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void update(ProductDTO dto) {
         Product product = new Product();
         product.setId(dto.getId());

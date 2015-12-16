@@ -16,6 +16,7 @@ public class ProductAdapter implements JsonSerializer<Product> {
         jsonObject.addProperty("id", product.getId());
         jsonObject.addProperty("category", product.getCategory().getTitle());
         jsonObject.addProperty("name", product.getName());
+        jsonObject.addProperty("description", product.getDescription());
         jsonObject.addProperty("price", product.getPrice());
         return jsonObject;
     }
