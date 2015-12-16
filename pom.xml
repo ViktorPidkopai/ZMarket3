@@ -128,5 +128,12 @@
             <version>2.4</version>
         </dependency>
 
+        <!-- Logger-->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

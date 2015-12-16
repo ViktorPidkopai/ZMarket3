@@ -39,7 +39,6 @@ public class CartController {
     public
     @ResponseBody
     List<ProductDTO> getAll() {
-        System.out.println("getAll() items in cart");
         Map<Product, Integer> items = cart.getItems();
         List<ProductDTO> result = new ArrayList<>();
         for (Map.Entry<Product, Integer> entry : items.entrySet()) {
@@ -52,7 +51,6 @@ public class CartController {
     public
     @ResponseBody
     int getTotalAmount(@PathVariable("id") long id) {
-        System.out.println("total amount = " + cart.totalAmount());
         return cart.totalAmount();
     }
 
@@ -60,7 +58,6 @@ public class CartController {
     public
     @ResponseBody
     boolean deleteById(@PathVariable("id") long id) {
-        System.out.println("delete from cart item id = " + id);
         return cart.deleteFromCart(id);
     }
 
@@ -68,7 +65,6 @@ public class CartController {
     public
     @ResponseBody
     void order() {
-        System.out.println("order...");
         Order order = new Order();
         Set<Product> itemsSet = new HashSet<>();
         Map<Product, Integer> itemsMap = cart.getItems();

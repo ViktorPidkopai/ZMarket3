@@ -19,7 +19,6 @@ public class ProductController {
     public
     @ResponseBody
     void create(@RequestBody ProductDTO dto) {
-        System.out.println("product controller add() product = " + dto);
         productService.create(dto);
     }
 
@@ -27,7 +26,6 @@ public class ProductController {
     public
     @ResponseBody
     void delete(@PathVariable("id") long id) {
-        System.out.println("productController delete(" + id + ")");
         productService.delete(id);
     }
 
@@ -35,7 +33,6 @@ public class ProductController {
     public
     @ResponseBody
     List<ProductDTO> getAll() {
-        System.out.println("productController getAll()");
         return productService.getAll();
     }
 
@@ -43,7 +40,6 @@ public class ProductController {
     public
     @ResponseBody
     List<ProductDTO> getByCategory(@PathVariable("category") String categoryTitle) {
-        System.out.println("productController getByCategory(" + categoryTitle + ")");
         return productService.getByCategoryTitle(categoryTitle);
     }
 
@@ -51,7 +47,6 @@ public class ProductController {
     public
     @ResponseBody
     List<ProductDTO> getByName(@PathVariable("name") String name) {
-        System.out.println("productController getByName(" + name + ")");
         return productService.getByName(name);
     }
 
@@ -60,7 +55,6 @@ public class ProductController {
     @ResponseBody
     ProductDTO getById(@PathVariable("id") long id) {
         ProductDTO result = productService.getById(id);
-        System.out.println("productController getId(" + id + ") = " + result);
         return result;
     }
 
@@ -68,7 +62,6 @@ public class ProductController {
     public
     @ResponseBody
     List<ProductDTO> getPriceRange(@PathVariable("min") int minPrice, @PathVariable("max") int maxPrice) {
-        System.out.println("productController getByPriceRange(" + minPrice + ", " + maxPrice + ")");
         return productService.getByPriceRange(minPrice, maxPrice);
     }
 
@@ -76,7 +69,6 @@ public class ProductController {
     public
     @ResponseBody
     void update(@RequestBody ProductDTO dto) {
-        System.out.println("productController update() product = " + dto);
         productService.update(dto);
     }
 

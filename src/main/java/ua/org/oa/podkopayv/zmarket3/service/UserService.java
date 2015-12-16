@@ -1,5 +1,6 @@
 package ua.org.oa.podkopayv.zmarket3.service;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,9 @@ import ua.org.oa.podkopayv.zmarket3.model.User;
 
 @Service
 @Repository
-//@Transactional
 public class UserService implements UserDetailsService {
 
-//    private static final Logger log = Logger.getLogger(UserService.class);
+    private static final Logger log = Logger.getLogger(UserService.class);
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
         Query query = sessionFactory.getCurrentSession().createQuery("FROM User U WHERE U.username=:username");
         query.setParameter("username", username);
         User result = (User) query.uniqueResult();
-//        log.info("Load user: " + result);
+        log.info("Load user: " + result);
         return result;
     }
 }
